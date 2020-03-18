@@ -31,7 +31,6 @@ export class BackgroundGraphics extends SketchComponent {
     }
 
     this.rayLength = Math.max(this.width, this.height) * 1.4;
-    console.log(`Constructor called ${this.renderer}`);
   }
 
   createGraphic = () => {

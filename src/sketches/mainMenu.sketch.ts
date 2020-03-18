@@ -33,7 +33,6 @@ export class MainMenuSketch extends SketchComponent {
       this.renderer.text(currentChar, 0, 0);
       this.renderer.pop();
       arclength += w / 2;
-      console.log('creating text');
     }
   };
 }

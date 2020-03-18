@@ -1,8 +1,9 @@
-import {LayeredRendition} from './LayeredRendition';
+import {ResizableComponent} from './ResizableComponent';
 
-export abstract class SketchComponent implements LayeredRendition {
+export abstract class SketchComponent extends ResizableComponent {
 
   protected constructor(s, width: number, height: number, layered = true, renderType = s.P2D) {
+    super();
     this.s = s;
     this.layered = layered;
     this.width = width;
@@ -17,16 +18,11 @@ export abstract class SketchComponent implements LayeredRendition {
     }
   }
 
-  s;
+  protected s;
   layered;
-  graphics;
   renderer;
-  width: number;
-  height: number;
 
-  createGraphic: () => void;
-  onClick?: (clickEvent) => void;
-  onResize?: (width: number, height: number) => void;
+  protected createGraphic: () => void;
   render = () => {
     if (this.layered) {
       this.renderer.clear();

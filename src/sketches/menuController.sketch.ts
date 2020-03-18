@@ -1,4 +1,3 @@
-import {SketchComponent} from '../models/SketchComponent';
 import {MainMenuSketch} from './mainMenu.sketch';
 
 export class MenuController {
