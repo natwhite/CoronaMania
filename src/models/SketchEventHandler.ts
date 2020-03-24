@@ -5,7 +5,7 @@ import {ResizableComponent} from './ResizableComponent';
 export class SketchEventHandler {
   collisionMap;
   private debugLayer;
-  collisionMapPixels;
+  // collisionMapPixels;
   private s;
   private components: InteractiveComponent[] = [];
   private callbackMap: { [color: number]: InteractiveComponent } = {};
@@ -21,22 +21,23 @@ export class SketchEventHandler {
 
   addComponent = <T extends InteractiveComponent>(component: T) => {
     this.components.push(component);
-  };
+  }
 
   addComponents = (components: InteractiveComponent[]) => {
     for (const component of components) {
       this.addComponent(component);
     }
-  };
+  }
 
   handleMouseMove = (width: number, height: number) => {
-  };
+  }
 
   updateCollisionMap = () => {
     console.log(`SketchEventHandler: Updating collision map`);
 
     this.colorIndex = 255;
-    this.collisionMap.background(0);
+    this.collisionMap.background(0, 0, 0, 0);
+    this.collisionMap.noStroke();
     // this.collisionMap.blendMode(this.s.REPLACE);
 
     for (const component of this.components) {
@@ -49,28 +50,31 @@ export class SketchEventHandler {
 
     // this.collisionMap.blendMode(this.s.ADD);
     this.collisionMap.loadPixels();
-    this.collisionMapPixels = this.collisionMap.pixels;
+    // this.collisionMapPixels = this.collisionMap.pixels;
 
     const debugCanvas = this.s.createGraphics(this.s.width, this.s.height);
-    debugCanvas.background(0);
-    (this.debugLayer = debugCanvas.get()).mask(this.collisionMap.get());
-  };
+    debugCanvas.background(255);
+    (this.debugLayer = this.collisionMap.get()).mask(debugCanvas.get());
+  }
 
   queryHitMap = (x: number, y: number): InteractiveComponent | undefined => {
     // The first four values (indices 0-3) in the array will be the R, G, B, A values of the pixel at (0, 0).
     // The second four values (indices 4-7) will contain the R, G, B, A values of the pixel at (1, 0).
-    const hitColor = this.collisionMapPixels[4 * (y * this.collisionMap.width + x)];
+    const pixelIndex = 4 * (y * this.collisionMap.width + x);
+    const hitColor = this.collisionMap.pixels[pixelIndex];
+    // console.log(`Color was ${hitColor} at ${pixelIndex} of ${this.collisionMap.pixels.length}`);
     return this.callbackMap[hitColor];
-    // console.log(hitColor, clickEvent.y * this.collisionMap.width + clickEvent.x);
-  };
+  }
 
   handleClick = (clickEvent: ClickEvent) => {
     const component = this.queryHitMap(clickEvent.x, clickEvent.y);
+    // console.log(`Got clickevent at ${clickEvent.x}, ${clickEvent.y}\n Component was ${component}`);
+    // console.log(this.collisionMap.pixels);
     if (!component) {
       return;
     }
     component.onClick(clickEvent);
-  };
+  }
 
   handleHover(clickEvent: ClickEvent) {
     const component = this.queryHitMap(clickEvent.x, clickEvent.y);
@@ -90,20 +94,23 @@ export class SketchEventHandler {
 
   isResizable = (component: InteractiveComponent | ResizableComponent): component is InteractiveComponent => {
     return (component as ResizableComponent).handleResize !== undefined;
-  };
+  }
 
   handleCanvasResize = (width: number, height: number) => {
-    this.collisionMap = this.s.Graphics(width, height);
+    this.collisionMap.resizeCanvas(width, height);
+    this.collisionMap.clear();
+    this.collisionMap.noStroke();
 
-    for (const component of this.components) {
-      if (this.isResizable(component)) {
-        (component as (InteractiveComponent & ResizableComponent)).handleResize(width, height);
-      }
-    }
-  };
+    // for (const component of this.components) {
+    //   if (this.isResizable(component)) {
+    //     (component as (InteractiveComponent & ResizableComponent)).handleResize(width, height);
+    //   }
+    // }
+    this.updateCollisionMap();
+  }
 
   debugHitBoxes = () => {
     this.s.image(this.debugLayer, -this.s.width / 2, -this.s.height / 2);
-  };
+  }
 }
 

@@ -1,6 +1,7 @@
 import {SketchComponent} from '../models/SketchComponent';
 import {InteractiveComponent} from '../models/InteractiveComponent';
 import {ClickEvent} from '../models/ClickEvent';
+import {getRandomColor} from '../models/Functions';
 
 export class RotatingGraphicSketch extends SketchComponent implements InteractiveComponent {
   constructor(s, width: number, height: number) {
@@ -16,14 +17,6 @@ export class RotatingGraphicSketch extends SketchComponent implements Interactiv
   strokeWeight = 1;
   private scaling = 1;
   hitDimentions = 350;
-
-  getNumberBetween = (start: number, end: number) => {
-    return Math.floor(Math.random() * (end - start) + start);
-  };
-
-  getRandomColor = () => {
-    return [this.getNumberBetween(0, 255), this.getNumberBetween(0, 255), this.getNumberBetween(0, 255)];
-  };
 
   createGraphic = () => {
     // this.renderer.translate(0, 0, -1000);
@@ -49,8 +42,8 @@ export class RotatingGraphicSketch extends SketchComponent implements Interactiv
     // TODO : Find the constants for each mouse button.
     // if (clickEvent.mouseButton == this.s.MOUSE)
     // console.log('Got clicked');
-    this.color1 = this.getRandomColor();
-    this.color2 = this.getRandomColor();
+    this.color1 = getRandomColor();
+    this.color2 = getRandomColor();
 
     // console.log(`Colors are ${this.color1}, ${this.color2}`);
   };

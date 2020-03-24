@@ -21,9 +21,13 @@ export abstract class SketchComponent extends ResizableComponent {
   protected s;
   layered;
   renderer;
+  rendering = true;
 
   protected createGraphic: () => void;
   render = () => {
+    if (!this.rendering) {
+      return;
+    }
     if (this.layered) {
       this.renderer.clear();
       this.renderer.push();
@@ -47,4 +51,8 @@ export abstract class SketchComponent extends ResizableComponent {
       this.onResize(this.width, this.height);
     }
   };
+
+  setRendering(state: boolean) {
+    this.rendering = state;
+  }
 }

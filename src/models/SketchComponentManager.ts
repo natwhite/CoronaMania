@@ -10,6 +10,10 @@ export class SketchComponentManager {
   componentInitializers: (new(s, w, d) => SketchComponent)[];
   components: SketchComponent[];
   eventHandler: SketchEventHandler;
+  resizeDebounceTime = 250;
+  timeSinceResizeRequest = 0;
+  requireResize = true;
+  debugMode = false;
 
   constructor(s, width: number, height: number) {
     this.s = s;
@@ -53,12 +57,33 @@ export class SketchComponentManager {
     for (const component of this.components) {
       component.render();
     }
+
+    if (this.requireResize) {
+      this.timeSinceResizeRequest += this.s.deltaTime;
+      if (this.timeSinceResizeRequest >= this.resizeDebounceTime) {
+        this.requireResize = false;
+        this.timeSinceResizeRequest = 0;
+        this.resizeCanvas();
+      }
+    }
+
+    if (this.debugMode) {
+      this.debugHitBoxes();
+    }
   };
 
-  handleCanvasResize = (width: number, height: number) => {
+  resizeCanvas() {
     for (const component of this.components) {
-      component.handleResize(width, height);
+      component.handleResize(this.width, this.height);
     }
+    this.eventHandler.handleCanvasResize(this.width, this.height);
+  }
+
+  handleCanvasResize = (width: number, height: number) => {
+    this.width = width;
+    this.height = height;
+    this.requireResize = true;
+    this.timeSinceResizeRequest = 0;
   };
 
   handleClick = (clickEvent: ClickEvent) => {
@@ -67,6 +92,10 @@ export class SketchComponentManager {
 
   handleHover = (clickEvent: ClickEvent) => {
     this.eventHandler.handleHover(clickEvent);
+  };
+
+  enableDebugMode = (state: boolean) => {
+    this.debugMode = state;
   };
 
   debugHitBoxes = () => {

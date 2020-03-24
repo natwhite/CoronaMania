@@ -10,6 +10,9 @@ export const GameSketch = (s) => {
   let height;
   let componentManager;
   let canvas;
+  let dragging = false;
+  let dragStart: ClickEvent;
+  let ready = false;
 
   s.preload = () => {
   };
@@ -18,6 +21,7 @@ export const GameSketch = (s) => {
     // s.createCanvas(width, height, s.WEBGL);
     width = s.windowWidth;
     height = s.windowHeight;
+    s.frameRate(30);
 
     componentManager = new SketchComponentManager(s, width, height);
     componentManager.addComponents([
@@ -34,32 +38,74 @@ export const GameSketch = (s) => {
     });
 
     componentManager.initialize();
+    ready = true;
   };
 
   s.draw = () => {
-    // s.scale(Math.min(width, width) / 800);
+    s.push();
+    s.translate(-width / 2, -height / 2);
+    s.stroke(0);
+    s.strokeWeight(10);
+    s.fill(0);
+    s.ellipse(s.mouseX, s.mouseY, 15, 15);
+    if (dragging) {
+      s.line(dragStart.x, dragStart.y, s.mouseX, s.mouseY);
+      s.ellipse(dragStart.x, dragStart.y, 15, 15);
+      // console.log(`Drawing line ${dragStart.x}, ${dragStart.y}`);
+    }
+    s.pop();
+    if (dragging) {
+      s.translate(s.mouseX - dragStart.x, 0);
+    }
     componentManager.renderComponents();
+    s.translate(-width, 0);
+    componentManager.renderComponents();
+  };
+
+  s.mouseMoved = () => {
+    if (!ready) {
+      return;
+    }
     componentManager.handleHover(new ClickEvent(s));
-    // componentManager.debugHitBoxes();
-
-
-    // s.push();
-    // s.noStroke();
-    // s.fill(255);
-    // s.rect(-100, -100, 100, 100);
-    // s.blendMode(s.REMOVE);
-    // s.fill(0, 0, 0, 255);
-    // s.rect(-50, -50, 50, 50);
-    // s.blendMode(s.ADD);
-    // s.pop();
   };
 
   s.mousePressed = () => {
-    // console.log('Got mouse Press');
+    if (!ready) {
+      return;
+    }
     componentManager.handleClick(new ClickEvent(s));
   };
 
+  s.touchMoved = () => {
+    if (!ready) {
+      return;
+    }
+    if (!dragging) {
+      dragStart = new ClickEvent(s);
+    }
+    dragging = true;
+  };
+
+  s.mouseReleased = () => {
+    dragging = false;
+  };
+
+  s.keyTyped = () => {
+    if (!ready) {
+      return;
+    }
+    console.log(`Got Keypress ${s.key}`);
+    if (s.key === '_') {
+      componentManager.enableDebugMode(true);
+    } else if (s.key === '+') {
+      componentManager.enableDebugMode(false);
+    }
+  };
+
   s.windowResized = () => {
+    if (!ready) {
+      return;
+    }
     width = s.windowWidth;
     height = s.windowHeight;
 

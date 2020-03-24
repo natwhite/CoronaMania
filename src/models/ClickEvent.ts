@@ -4,8 +4,8 @@ export class ClickEvent {
   public mouseButton;
 
   constructor(s) {
-    this.x = s.mouseX;
-    this.y = s.mouseY;
+    this.x = Math.floor(s.mouseX);
+    this.y = Math.floor(s.mouseY);
     this.mouseButton = s.mouseButton;
   }
 }
