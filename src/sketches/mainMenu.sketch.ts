@@ -1,24 +1,29 @@
+import {EventEmitter} from 'events';
 import {ShrinkGrow} from '../models/Animations';
 import {ClickEvent} from '../models/ClickEvent';
 import {DragMouseEvent} from '../models/DragMouseEvent';
 import {Functions} from '../models/Functions';
 import {IInteractiveComponent} from '../models/IInteractiveComponent';
 import {SketchComponent} from '../models/SketchComponent';
-import {Oscillator} from '../models/Transforms';
+import {Oscillator} from '../models/transforms/Oscillator';
+import {RNGColorOscillator} from '../models/transforms/RNGColorOscillator';
 
 export class MainMenuSketch extends SketchComponent implements IInteractiveComponent {
 
-  public message = 'Rhythm Game!';
+  public message = 'Corona Mania!';
   public font;
   public logoRadius = 500;
   public startButtonShrinkGrow;
   public logoOscillator;
+  public logoColorOscillator;
   public logoOscillationRange = 0.01;
   public logoOscillationWaveLength = 1;
   public logoCyclesPerSecond = 0.5;
   public startButtonColor = [0, 0, 0];
   public outlineColor = 0;
   public startButtonHovered = false;
+
+  public onInteraction: EventEmitter = new EventEmitter();
 
   constructor(s, w, h) {
     super(s, w, h, true, s.P2D);
@@ -34,6 +39,7 @@ export class MainMenuSketch extends SketchComponent implements IInteractiveCompo
       1 + this.logoOscillationRange,
       this.logoCyclesPerSecond
     );
+    this.logoColorOscillator = new RNGColorOscillator();
   }
 
   public createLogo = () => {
@@ -41,18 +47,21 @@ export class MainMenuSketch extends SketchComponent implements IInteractiveCompo
     this.renderer.translate(this.width / 2, this.height * 0.3 + this.logoRadius);
     let arclength = this.logoRadius * this.renderer.PI / 2 - this.renderer.textWidth(this.message) / 2;
     this.logoOscillator.nextState();
+    this.logoColorOscillator.nextState();
+
+    this.renderer.fill(0);
+    // this.renderer.fill(Functions.getRandomColor());
     for (let i = 0; i < this.message.length; i++) {
       const currentChar = this.message.charAt(i);
       const w = this.renderer.textWidth(currentChar);
       const localRadius = this.logoRadius * this.logoOscillator.stateAtPoint(i * this.logoOscillationWaveLength);
-      // console.log(localRadius);
-
       arclength += w / 2;
       const theta = this.renderer.PI + arclength / this.logoRadius;
+
       this.renderer.push();
       this.renderer.translate(this.logoRadius * this.renderer.cos(theta), localRadius * this.renderer.sin(theta));
       this.renderer.rotate(theta + this.renderer.PI / 2);
-      this.renderer.fill(0);
+      this.renderer.fill(this.logoColorOscillator.stateAtPoint(i * this.logoOscillationWaveLength));
       this.renderer.text(currentChar, 0, 0);
       this.renderer.pop();
       arclength += w / 2;
@@ -85,8 +94,8 @@ export class MainMenuSketch extends SketchComponent implements IInteractiveCompo
   };
 
   public onClick(clickEvent: ClickEvent) {
-    console.log(`Clicked Start Button`);
     this.startButtonColor = Functions.getRandomColor();
+    this.onInteraction.emit('clicked');
   }
 
   public onMouseDrag(dragEvent: DragMouseEvent) {
@@ -94,7 +103,6 @@ export class MainMenuSketch extends SketchComponent implements IInteractiveCompo
   }
 
   public onHover() {
-    console.log(`Hovered Start Button`);
     this.outlineColor = 255;
     this.startButtonHovered = true;
   }

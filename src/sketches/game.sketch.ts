@@ -1,10 +1,11 @@
 import {ClickEvent} from '../models/ClickEvent';
 import {DragMouseEvent} from '../models/DragMouseEvent';
 import {TitleScene} from './scenes/titleScene';
-import {SceneTransitionManager} from './SceneTransitionManager';
+import {SceneTransitionManager, TransitionType} from './SceneTransitionManager';
 
 // Going to need a way to import, obj files.
 // TODO : Rewrite this whole library to meet ES6 standards.
+// TODO : Create a base P5JSGame Object that handles default functionality and event creation.
 export const GameSketch = (s) => {
   let width;
   let height;
@@ -25,6 +26,7 @@ export const GameSketch = (s) => {
     s.frameRate(30);
 
     sceneTransitionManager = new SceneTransitionManager(s, [
+      new TitleScene(s),
       new TitleScene(s)
     ]);
 
@@ -36,6 +38,8 @@ export const GameSketch = (s) => {
 
     sceneTransitionManager.initialize();
     ready = true;
+
+    // img = s.loadImage('../assets/CoronaMania_Vector.svg');
   };
 
   s.renderMouse = () => {
@@ -56,6 +60,7 @@ export const GameSketch = (s) => {
   };
 
   s.draw = () => {
+    s.background(0);
     s.renderMouse();
     if (dragging) {
       const x = s.constrain(s.mouseX, 0, width);
@@ -100,8 +105,10 @@ export const GameSketch = (s) => {
     console.log(`Got Keypress ${s.key}`);
     if (s.key === '_') {
       // componentManager.enableDebugMode(true);
+      sceneTransitionManager.transitionToScene(1, TransitionType.RIGHT);
     } else if (s.key === '+') {
       // componentManager.enableDebugMode(false);
+      sceneTransitionManager.transitionToScene(0, TransitionType.LEFT);
     }
   };
 

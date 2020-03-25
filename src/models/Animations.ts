@@ -1,4 +1,4 @@
-import {Oscillator} from './Transforms';
+import {Oscillator} from './transforms/Oscillator';
 
 export interface IAnimation {
   nextState();

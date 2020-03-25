@@ -1,3 +1,4 @@
+import {EventEmitter} from 'events';
 import {ClickEvent} from '../../models/ClickEvent';
 import {DragMouseEvent} from '../../models/DragMouseEvent';
 import {SketchComponentManager} from '../../models/SketchComponentManager';
@@ -10,6 +11,7 @@ export class TitleScene {
   public width;
   public height;
   public componentManager;
+  public transition: EventEmitter = new EventEmitter();
 
   constructor(s) {
     this.s = s;
@@ -41,6 +43,8 @@ export class TitleScene {
     this.componentManager.handleMouseDrag(dragEvent);
   };
   public handleCanvasResize = (width, height) => {
+    this.width = width;
+    this.height = height;
     this.componentManager.handleCanvasResize(width, height);
   };
 }

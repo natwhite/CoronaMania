@@ -1,3 +1,4 @@
+import {EventEmitter} from 'events';
 import {ClickEvent} from '../models/ClickEvent';
 import {DragMouseEvent} from '../models/DragMouseEvent';
 import {Functions} from '../models/Functions';
@@ -14,6 +15,7 @@ export class RotatingGraphicSketch extends SketchComponent implements IInteracti
   public strokeColor = 0;
   public strokeWeight = 1;
   public hitDimensions = 350;
+  public onInteraction: EventEmitter = new EventEmitter();
   private scaling = 1;
 
   constructor(s, width: number, height: number) {
@@ -46,7 +48,7 @@ export class RotatingGraphicSketch extends SketchComponent implements IInteracti
     // console.log('Got clicked');
     this.color1 = Functions.getRandomColor();
     this.color2 = Functions.getRandomColor();
-
+    this.onInteraction.emit('clicked');
     // console.log(`Colors are ${this.color1}, ${this.color2}`);
   };
 
@@ -55,14 +57,12 @@ export class RotatingGraphicSketch extends SketchComponent implements IInteracti
   }
 
   public onHover = () => {
-    console.log('RotatingGraphic: Hovered');
     this.strokeColor = 255;
     this.strokeWeight = 5;
     this.scaling = 1.1;
   };
 
   public onHoverLost = () => {
-    console.log('RotatingGraphic: Lost Hover');
     this.strokeColor = 0;
     this.strokeWeight = 1;
     this.scaling = 1;
