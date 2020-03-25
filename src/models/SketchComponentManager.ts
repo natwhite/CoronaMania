@@ -28,27 +28,39 @@ export class SketchComponentManager {
   public initialize = () => {
     console.log('SketchComponentManager: Initializing component manager');
 
-    for (const component of this.componentInitializers) {
-      const createdComponent = new component(this.s, this.width, this.height);
-      this.components.push(createdComponent);
+    // for (const component of this.componentInitializers) {
+    //   const createdComponent = new component(this.s, this.width, this.height);
+    //   this.components.push(createdComponent);
+    // }
 
-      if (this.isInteractive(createdComponent)) {
-        this.eventHandler.addComponent(createdComponent);
+    for (const component of this.components) {
+      if (this.isInteractive(component)) {
+        this.eventHandler.addComponent(component);
       }
     }
     this.eventHandler.updateCollisionMap();
   };
 
-  public isInteractive = (component: any | IInteractiveComponent): component is IInteractiveComponent => {
+  public isInteractive = (component: SketchComponent | IInteractiveComponent): component is IInteractiveComponent => {
     return (component as IInteractiveComponent).onClick !== undefined;
   };
 
-  public addComponent = (component: new(s, w, h) => SketchComponent) => {
-    this.componentInitializers.push(component);
+  // public addComponentByClass = (component: new(s, w, d) => SketchComponent) => {
+  //   this.componentInitializers.push(component);
+  // };
+  //
+  // // TODO : Convert to just appending all to the end of componentInitializers.
+  // public addComponentsByClass = (components: Array<new(s, w, d) => SketchComponent>) => {
+  //   for (const component of components) {
+  //     this.addComponentByClass(component);
+  //   }
+  // };
+
+  public addComponent = (component: SketchComponent) => {
+    this.components.push(component);
   };
 
-  // TODO : Convert to just appending all to the end of componentInitializers.
-  public addComponents = (components: Array<new(s, w, d) => SketchComponent>) => {
+  public addComponents = (components: SketchComponent[]) => {
     for (const component of components) {
       this.addComponent(component);
     }

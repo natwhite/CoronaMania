@@ -11,7 +11,7 @@ export class TitleScene {
   public width;
   public height;
   public componentManager;
-  public transition: EventEmitter = new EventEmitter();
+  public onStartClick: EventEmitter = new EventEmitter();
 
   constructor(s) {
     this.s = s;
@@ -19,11 +19,23 @@ export class TitleScene {
     this.height = s.windowHeight;
     console.log(`Dimensions at title scene are ${this.width}, ${this.height}`);
     this.componentManager = new SketchComponentManager(s, this.width, this.height);
+    // this.componentManager.addComponentsByClass([
+    //   BackgroundGraphics,
+    //   // MenuController,
+    //   RotatingGraphicSketch,
+    //   MainMenuSketch
+    // ]);
+
+    const mainMenu = new MainMenuSketch(s, this.width, this.height);
+    mainMenu.onInteraction.on('click', () => {
+      console.log(`Got click from MainMenu`);
+      this.onStartClick.emit('transition');
+    });
     this.componentManager.addComponents([
-      BackgroundGraphics,
+      new BackgroundGraphics(s, this.width, this.height),
       // MenuController,
-      RotatingGraphicSketch,
-      MainMenuSketch
+      new RotatingGraphicSketch(s, this.width, this.height),
+      mainMenu
     ]);
   }
 

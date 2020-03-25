@@ -95,7 +95,7 @@ export class MainMenuSketch extends SketchComponent implements IInteractiveCompo
 
   public onClick(clickEvent: ClickEvent) {
     this.startButtonColor = Functions.getRandomColor();
-    this.onInteraction.emit('clicked');
+    this.onInteraction.emit('click');
   }
 
   public onMouseDrag(dragEvent: DragMouseEvent) {

@@ -15,7 +15,6 @@ export class SceneTransitionManager {
   private transitioning = false;
   private lerpTransform;
   private transitionMultMatrix = [0, 0];
-  private transitionDestMatrix = [0, 0];
 
   constructor(s, scenes: Scene[]) {
     if (scenes.length <= 0) {

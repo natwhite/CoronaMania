@@ -25,10 +25,20 @@ export const GameSketch = (s) => {
     height = s.windowHeight;
     s.frameRate(30);
 
+    const titleScene1 = new TitleScene(s);
+    const titleScene2 = new TitleScene(s);
     sceneTransitionManager = new SceneTransitionManager(s, [
-      new TitleScene(s),
-      new TitleScene(s)
+      titleScene1,
+      titleScene2
     ]);
+    titleScene1.onStartClick.on('transition', () => {
+      console.log(`Title 1 Transition`);
+      sceneTransitionManager.transitionToScene(1, TransitionType.RIGHT);
+    });
+    titleScene2.onStartClick.on('transition', () => {
+      console.log(`Title 2 Transition`);
+      sceneTransitionManager.transitionToScene(0, TransitionType.LEFT);
+    });
 
     canvas = s.createCanvas(width, height, s.WEBGL);
 
@@ -105,10 +115,8 @@ export const GameSketch = (s) => {
     console.log(`Got Keypress ${s.key}`);
     if (s.key === '_') {
       // componentManager.enableDebugMode(true);
-      sceneTransitionManager.transitionToScene(1, TransitionType.RIGHT);
     } else if (s.key === '+') {
       // componentManager.enableDebugMode(false);
-      sceneTransitionManager.transitionToScene(0, TransitionType.LEFT);
     }
   };
 
