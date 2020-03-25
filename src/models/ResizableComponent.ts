@@ -1,10 +1,10 @@
 export abstract class ResizableComponent {
-  width: number;
-  height: number;
+  public width: number;
+  public height: number;
 
   protected onResize?: (width: number, height: number) => void;
 
-  handleResize = (width: number, height: number) => {
+  public handleResize = (width: number, height: number) => {
     this.width = width;
     this.height = height;
 

@@ -1,11 +1,24 @@
-import {SketchComponent} from '../models/SketchComponent';
 import {ShrinkGrow} from '../models/Animations';
-import {InteractiveComponent} from '../models/InteractiveComponent';
 import {ClickEvent} from '../models/ClickEvent';
-import {getRandomColor} from '../models/Functions';
+import {DragMouseEvent} from '../models/DragMouseEvent';
+import {Functions} from '../models/Functions';
+import {IInteractiveComponent} from '../models/IInteractiveComponent';
+import {SketchComponent} from '../models/SketchComponent';
 import {Oscillator} from '../models/Transforms';
 
-export class MainMenuSketch extends SketchComponent implements InteractiveComponent {
+export class MainMenuSketch extends SketchComponent implements IInteractiveComponent {
+
+  public message = 'Rhythm Game!';
+  public font;
+  public logoRadius = 500;
+  public startButtonShrinkGrow;
+  public logoOscillator;
+  public logoOscillationRange = 0.01;
+  public logoOscillationWaveLength = 1;
+  public logoCyclesPerSecond = 0.5;
+  public startButtonColor = [0, 0, 0];
+  public outlineColor = 0;
+  public startButtonHovered = false;
 
   constructor(s, w, h) {
     super(s, w, h, true, s.P2D);
@@ -16,22 +29,14 @@ export class MainMenuSketch extends SketchComponent implements InteractiveCompon
     this.renderer.textAlign(this.renderer.CENTER);
     this.renderer.smooth();
     this.startButtonShrinkGrow = new ShrinkGrow(this.renderer, 1, 1.2, 1);
-    this.logoOscillator = new Oscillator(1 - this.logoOscillationRange, 1 + this.logoOscillationRange, this.logoCyclesPerSecond);
+    this.logoOscillator = new Oscillator(
+      1 - this.logoOscillationRange,
+      1 + this.logoOscillationRange,
+      this.logoCyclesPerSecond
+    );
   }
 
-  message = 'Rhythm Game!';
-  font;
-  logoRadius = 500;
-  startButtonShrinkGrow;
-  logoOscillator;
-  logoOscillationRange = 0.01;
-  logoOscillationWaveLength = 1;
-  logoCyclesPerSecond = 0.5;
-  startButtonColor = [0, 0, 0];
-  outlineColor = 0;
-  startButtonHovered = false;
-
-  createLogo = () => {
+  public createLogo = () => {
     this.renderer.push();
     this.renderer.translate(this.width / 2, this.height * 0.3 + this.logoRadius);
     let arclength = this.logoRadius * this.renderer.PI / 2 - this.renderer.textWidth(this.message) / 2;
@@ -55,7 +60,7 @@ export class MainMenuSketch extends SketchComponent implements InteractiveCompon
     this.renderer.pop();
   };
 
-  createStartButton = () => {
+  public createStartButton = () => {
     this.renderer.push();
     this.renderer.translate(this.width / 2, this.height * 0.7);
     this.renderer.rectMode(this.renderer.CENTER);
@@ -74,28 +79,32 @@ export class MainMenuSketch extends SketchComponent implements InteractiveCompon
     this.renderer.pop();
   };
 
-  createGraphic = () => {
+  public createGraphic = () => {
     this.createLogo();
     this.createStartButton();
   };
 
-  onClick(clickEvent: ClickEvent) {
+  public onClick(clickEvent: ClickEvent) {
     console.log(`Clicked Start Button`);
-    this.startButtonColor = getRandomColor();
+    this.startButtonColor = Functions.getRandomColor();
   }
 
-  onHover() {
+  public onMouseDrag(dragEvent: DragMouseEvent) {
+    return;
+  }
+
+  public onHover() {
     console.log(`Hovered Start Button`);
     this.outlineColor = 255;
     this.startButtonHovered = true;
   }
 
-  onHoverLost() {
+  public onHoverLost() {
     this.outlineColor = 0;
     this.startButtonHovered = false;
   }
 
-  registerBounds(s): any {
+  public registerBounds(s): any {
     s.translate(this.width / 2, this.height * 0.7 - 30);
     s.rectMode(this.renderer.CENTER);
     s.rect(0, 0, 500, 100);

@@ -1,6 +1,12 @@
 import {ResizableComponent} from './ResizableComponent';
 
 export abstract class SketchComponent extends ResizableComponent {
+  public layered;
+  public renderer;
+  public rendering = true;
+
+  protected s;
+  protected createGraphic: () => void;
 
   protected constructor(s, width: number, height: number, layered = true, renderType = s.P2D) {
     super();
@@ -17,14 +23,7 @@ export abstract class SketchComponent extends ResizableComponent {
       this.renderer = s;
     }
   }
-
-  protected s;
-  layered;
-  renderer;
-  rendering = true;
-
-  protected createGraphic: () => void;
-  render = () => {
+  public render = () => {
     if (!this.rendering) {
       return;
     }
@@ -39,7 +38,7 @@ export abstract class SketchComponent extends ResizableComponent {
     }
   };
 
-  handleResize = (width: number, height: number) => {
+  public handleResize = (width: number, height: number) => {
     this.width = width;
     this.height = height;
 
@@ -52,7 +51,7 @@ export abstract class SketchComponent extends ResizableComponent {
     }
   };
 
-  setRendering(state: boolean) {
+  public setRendering(state: boolean) {
     this.rendering = state;
   }
 }

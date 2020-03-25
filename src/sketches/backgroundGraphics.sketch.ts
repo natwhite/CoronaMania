@@ -1,15 +1,15 @@
 import {SketchComponent} from '../models/SketchComponent';
 
-interface BackgroundRay {
+interface IBackgroundRay {
   color: [number, number, number];
   rotation: number;
   step: number;
 }
 
 export class BackgroundGraphics extends SketchComponent {
-  rays: BackgroundRay[];
+  public rays: IBackgroundRay[];
 
-  rayColors: [number, number, number][] = [
+  public rayColors: Array<[number, number, number]> = [
     [171, 68, 247],
     [7, 156, 255],
     [18, 248, 245],
@@ -17,9 +17,9 @@ export class BackgroundGraphics extends SketchComponent {
     [246, 206, 10],
     [247, 23, 0],
   ];
-  rayRotationAcceleration = -0.0003;
-  rayLength;
-  rayWidth = 100;
+  public rayRotationAcceleration = -0.0003;
+  public rayLength;
+  public rayWidth = 100;
 
   constructor(s, width, height) {
     super(s, width, height);
@@ -33,7 +33,7 @@ export class BackgroundGraphics extends SketchComponent {
     this.rayLength = Math.max(this.width, this.height) * 1.4;
   }
 
-  createGraphic = () => {
+  public createGraphic = () => {
     this.renderer.translate(this.width / 2, this.height / 2);
     this.renderer.background(50, 348, 255);
     this.renderer.noStroke();
@@ -47,7 +47,7 @@ export class BackgroundGraphics extends SketchComponent {
     }
   };
 
-  onResize = (width, height) => {
+  public onResize = (width, height) => {
     this.rayLength = Math.max(width, height) * 1.4;
   };
 }

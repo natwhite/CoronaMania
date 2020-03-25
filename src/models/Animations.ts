@@ -1,19 +1,19 @@
 import {Oscillator} from './Transforms';
 
-export interface Animation {
+export interface IAnimation {
   nextState();
 }
 
-export class ShrinkGrow implements Animation {
-  oscillator;
-  s;
+export class ShrinkGrow implements IAnimation {
+  public oscillator;
+  public s;
 
   constructor(s, min: number, max: number, cyclesPerSecond: number) {
     this.s = s;
     this.oscillator = new Oscillator(min, max, cyclesPerSecond);
   }
 
-  nextState() {
+  public nextState() {
     this.s.scale(this.oscillator.nextState());
   }
 }

@@ -4,8 +4,8 @@ export class ClickEvent {
   public mouseButton;
 
   constructor(s) {
-    this.x = Math.floor(s.mouseX);
-    this.y = Math.floor(s.mouseY);
+    this.x = s.constrain(Math.floor(s.mouseX), 0, s.width);
+    this.y = s.constrain(Math.floor(s.mouseY), 0, s.height);
     this.mouseButton = s.mouseButton;
   }
 }

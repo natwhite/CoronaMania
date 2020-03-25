@@ -1,13 +1,13 @@
 import {MainMenuSketch} from './mainMenu.sketch';
 
 export class MenuController {
-  mainMenu;
+  public mainMenu;
 
   constructor(s, width: number, height: number) {
     this.mainMenu = new MainMenuSketch(s, width, height);
   }
 
-  createGraphic = () => {
+  public createGraphic = () => {
     this.mainMenu.createGraphic();
   };
 }

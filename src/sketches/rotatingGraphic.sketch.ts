@@ -1,24 +1,26 @@
-import {SketchComponent} from '../models/SketchComponent';
-import {InteractiveComponent} from '../models/InteractiveComponent';
 import {ClickEvent} from '../models/ClickEvent';
-import {getRandomColor} from '../models/Functions';
+import {DragMouseEvent} from '../models/DragMouseEvent';
+import {Functions} from '../models/Functions';
+import {IInteractiveComponent} from '../models/IInteractiveComponent';
+import {SketchComponent} from '../models/SketchComponent';
 
-export class RotatingGraphicSketch extends SketchComponent implements InteractiveComponent {
+export class RotatingGraphicSketch extends SketchComponent implements IInteractiveComponent {
+
+  public rotation = 0;
+  public boundsUpdated = false;
+
+  public color1 = [255, 0, 255];
+  public color2 = [0, 255, 255];
+  public strokeColor = 0;
+  public strokeWeight = 1;
+  public hitDimensions = 350;
+  private scaling = 1;
+
   constructor(s, width: number, height: number) {
     super(s, width, height, true, s.WEBGL);
   }
 
-  rotation = 0;
-  boundsUpdated = false;
-
-  color1 = [255, 0, 255];
-  color2 = [0, 255, 255];
-  strokeColor = 0;
-  strokeWeight = 1;
-  private scaling = 1;
-  hitDimentions = 350;
-
-  createGraphic = () => {
+  public createGraphic = () => {
     // this.renderer.translate(0, 0, -1000);
     this.renderer.rotateX(this.rotation += 0.003);
     this.renderer.rotateY(this.rotation += 0.003);
@@ -33,29 +35,33 @@ export class RotatingGraphicSketch extends SketchComponent implements Interactiv
     this.renderer.box(210, 310, 210);
   };
 
-  registerBounds = (s) => {
+  public registerBounds = (s) => {
     s.translate(s.width / 2, s.height / 2);
-    s.rect(-this.hitDimentions / 2, -this.hitDimentions / 2, this.hitDimentions, this.hitDimentions);
+    s.rect(-this.hitDimensions / 2, -this.hitDimensions / 2, this.hitDimensions, this.hitDimensions);
   };
 
-  onClick = (clickEvent: ClickEvent) => {
+  public onClick = (clickEvent: ClickEvent) => {
     // TODO : Find the constants for each mouse button.
     // if (clickEvent.mouseButton == this.s.MOUSE)
     // console.log('Got clicked');
-    this.color1 = getRandomColor();
-    this.color2 = getRandomColor();
+    this.color1 = Functions.getRandomColor();
+    this.color2 = Functions.getRandomColor();
 
     // console.log(`Colors are ${this.color1}, ${this.color2}`);
   };
 
-  onHover = () => {
+  public onMouseDrag(dragEvent: DragMouseEvent) {
+    return;
+  }
+
+  public onHover = () => {
     console.log('RotatingGraphic: Hovered');
     this.strokeColor = 255;
     this.strokeWeight = 5;
     this.scaling = 1.1;
   };
 
-  onHoverLost = () => {
+  public onHoverLost = () => {
     console.log('RotatingGraphic: Lost Hover');
     this.strokeColor = 0;
     this.strokeWeight = 1;

@@ -1,19 +1,20 @@
+import {ClickEvent} from './ClickEvent';
+import {DragMouseEvent} from './DragMouseEvent';
+import {IInteractiveComponent} from './IInteractiveComponent';
 import {SketchComponent} from './SketchComponent';
 import {SketchEventHandler} from './SketchEventHandler';
-import {InteractiveComponent} from './InteractiveComponent';
-import {ClickEvent} from './ClickEvent';
 
 export class SketchComponentManager {
-  s;
-  width: number;
-  height: number;
-  componentInitializers: (new(s, w, d) => SketchComponent)[];
-  components: SketchComponent[];
-  eventHandler: SketchEventHandler;
-  resizeDebounceTime = 250;
-  timeSinceResizeRequest = 0;
-  requireResize = true;
-  debugMode = false;
+  public s;
+  public width: number;
+  public height: number;
+  public componentInitializers: Array<new(s, w, d) => SketchComponent>;
+  public components: SketchComponent[];
+  public eventHandler: SketchEventHandler;
+  public resizeDebounceTime = 250;
+  public timeSinceResizeRequest = 0;
+  public requireResize = true;
+  public debugMode = false;
 
   constructor(s, width: number, height: number) {
     this.s = s;
@@ -24,7 +25,7 @@ export class SketchComponentManager {
     this.eventHandler = new SketchEventHandler(s, width, height);
   }
 
-  initialize = () => {
+  public initialize = () => {
     console.log('SketchComponentManager: Initializing component manager');
 
     for (const component of this.componentInitializers) {
@@ -38,22 +39,22 @@ export class SketchComponentManager {
     this.eventHandler.updateCollisionMap();
   };
 
-  isInteractive = (component: any | InteractiveComponent): component is InteractiveComponent => {
-    return (component as InteractiveComponent).onClick !== undefined;
+  public isInteractive = (component: any | IInteractiveComponent): component is IInteractiveComponent => {
+    return (component as IInteractiveComponent).onClick !== undefined;
   };
 
-  addComponent = (component: new(s, w, h) => SketchComponent) => {
+  public addComponent = (component: new(s, w, h) => SketchComponent) => {
     this.componentInitializers.push(component);
   };
 
   // TODO : Convert to just appending all to the end of componentInitializers.
-  addComponents = (components: (new(s, w, d) => SketchComponent)[]) => {
+  public addComponents = (components: Array<new(s, w, d) => SketchComponent>) => {
     for (const component of components) {
       this.addComponent(component);
     }
   };
 
-  renderComponents = () => {
+  public renderComponents = () => {
     for (const component of this.components) {
       component.render();
     }
@@ -72,33 +73,37 @@ export class SketchComponentManager {
     }
   };
 
-  resizeCanvas() {
+  public resizeCanvas() {
     for (const component of this.components) {
       component.handleResize(this.width, this.height);
     }
     this.eventHandler.handleCanvasResize(this.width, this.height);
   }
 
-  handleCanvasResize = (width: number, height: number) => {
+  public handleCanvasResize = (width: number, height: number) => {
     this.width = width;
     this.height = height;
     this.requireResize = true;
     this.timeSinceResizeRequest = 0;
   };
 
-  handleClick = (clickEvent: ClickEvent) => {
+  public handleClick = (clickEvent: ClickEvent) => {
     this.eventHandler.handleClick(clickEvent);
   };
 
-  handleHover = (clickEvent: ClickEvent) => {
+  public handleHover = (clickEvent: ClickEvent) => {
     this.eventHandler.handleHover(clickEvent);
   };
 
-  enableDebugMode = (state: boolean) => {
+  public handleMouseDrag = (dragEvent: DragMouseEvent) => {
+    this.eventHandler.handleMouseDrag(dragEvent);
+  };
+
+  public enableDebugMode = (state: boolean) => {
     this.debugMode = state;
   };
 
-  debugHitBoxes = () => {
+  public debugHitBoxes = () => {
     this.eventHandler.debugHitBoxes();
   };
 }

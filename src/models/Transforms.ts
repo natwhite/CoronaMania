@@ -1,10 +1,16 @@
-export interface Transform {
+export interface ITransform {
   state: number;
 
   nextState(): number;
 }
 
-export class Oscillator implements Transform {
+export class Oscillator implements ITransform {
+
+  public state = 0;
+  private readonly min;
+  private readonly max;
+  private readonly baseSpeed;
+  private readonly cyclesPerSecond: number;
 
   constructor(min: number, max: number, cyclesPerSecond: number) {
     this.min = min;
@@ -13,18 +19,12 @@ export class Oscillator implements Transform {
     this.baseSpeed = 6.28318530717958647693 / 30;
   }
 
-  state = 0;
-  private readonly min;
-  private readonly max;
-  private readonly baseSpeed;
-  private readonly cyclesPerSecond: number;
-
-  nextState() {
+  public nextState() {
     this.state += this.baseSpeed;
     return this.stateAtPoint(0);
   }
 
-  stateAtPoint(x: number) {
+  public stateAtPoint(x: number) {
     return (this.max - this.min) / 2 * (Math.sin((this.state + x) * this.cyclesPerSecond) + 1) + this.min;
   }
 }

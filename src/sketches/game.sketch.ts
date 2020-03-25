@@ -1,20 +1,21 @@
-import {BackgroundGraphics} from './backgroundGraphics.sketch';
-import {SketchComponentManager} from '../models/SketchComponentManager';
-import {MainMenuSketch} from './mainMenu.sketch';
-import {RotatingGraphicSketch} from './rotatingGraphic.sketch';
 import {ClickEvent} from '../models/ClickEvent';
+import {DragMouseEvent} from '../models/DragMouseEvent';
+import {TitleScene} from './scenes/titleScene';
+import {SceneTransitionManager} from './SceneTransitionManager';
 
 // Going to need a way to import, obj files.
+// TODO : Rewrite this whole library to meet ES6 standards.
 export const GameSketch = (s) => {
   let width;
   let height;
-  let componentManager;
   let canvas;
   let dragging = false;
   let dragStart: ClickEvent;
   let ready = false;
+  let sceneTransitionManager: SceneTransitionManager;
 
   s.preload = () => {
+    return;
   };
 
   s.setup = () => {
@@ -23,12 +24,8 @@ export const GameSketch = (s) => {
     height = s.windowHeight;
     s.frameRate(30);
 
-    componentManager = new SketchComponentManager(s, width, height);
-    componentManager.addComponents([
-      BackgroundGraphics,
-      // MenuController,
-      RotatingGraphicSketch,
-      MainMenuSketch
+    sceneTransitionManager = new SceneTransitionManager(s, [
+      new TitleScene(s)
     ]);
 
     canvas = s.createCanvas(width, height, s.WEBGL);
@@ -37,43 +34,49 @@ export const GameSketch = (s) => {
       console.log('GameManager: Mouse Over');
     });
 
-    componentManager.initialize();
+    sceneTransitionManager.initialize();
     ready = true;
   };
 
-  s.draw = () => {
+  s.renderMouse = () => {
     s.push();
     s.translate(-width / 2, -height / 2);
     s.stroke(0);
     s.strokeWeight(10);
     s.fill(0);
-    s.ellipse(s.mouseX, s.mouseY, 15, 15);
+    const x = s.constrain(s.mouseX, 0, width);
+    const y = s.constrain(s.mouseY, 0, height);
+    s.ellipse(x, y, 15, 15);
     if (dragging) {
-      s.line(dragStart.x, dragStart.y, s.mouseX, s.mouseY);
+      s.line(dragStart.x, dragStart.y, x, y);
       s.ellipse(dragStart.x, dragStart.y, 15, 15);
       // console.log(`Drawing line ${dragStart.x}, ${dragStart.y}`);
     }
     s.pop();
+  };
+
+  s.draw = () => {
+    s.renderMouse();
     if (dragging) {
-      s.translate(s.mouseX - dragStart.x, 0);
+      const x = s.constrain(s.mouseX, 0, width);
+      s.translate(x - dragStart.x, 0);
+      sceneTransitionManager.handleMouseDrag(new DragMouseEvent(s, dragStart.x, dragStart.y));
     }
-    componentManager.renderComponents();
-    s.translate(-width, 0);
-    componentManager.renderComponents();
+    sceneTransitionManager.draw();
   };
 
   s.mouseMoved = () => {
     if (!ready) {
       return;
     }
-    componentManager.handleHover(new ClickEvent(s));
+    sceneTransitionManager.handleHover(new ClickEvent(s));
   };
 
   s.mousePressed = () => {
     if (!ready) {
       return;
     }
-    componentManager.handleClick(new ClickEvent(s));
+    sceneTransitionManager.handleClick(new ClickEvent(s));
   };
 
   s.touchMoved = () => {
@@ -96,9 +99,9 @@ export const GameSketch = (s) => {
     }
     console.log(`Got Keypress ${s.key}`);
     if (s.key === '_') {
-      componentManager.enableDebugMode(true);
+      // componentManager.enableDebugMode(true);
     } else if (s.key === '+') {
-      componentManager.enableDebugMode(false);
+      // componentManager.enableDebugMode(false);
     }
   };
 
@@ -110,6 +113,6 @@ export const GameSketch = (s) => {
     height = s.windowHeight;
 
     s.resizeCanvas(width, height);
-    componentManager.handleCanvasResize(width, height);
+    sceneTransitionManager.handleCanvasResize(width, height);
   };
 };
