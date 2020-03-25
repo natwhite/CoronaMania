@@ -1,3 +1,4 @@
+import {EventEmitter} from 'events';
 import {Functions} from '../Functions';
 import {ITransform} from '../Transforms';
 import {Oscillator} from './Oscillator';
@@ -5,6 +6,7 @@ import {Oscillator} from './Oscillator';
 export class RNGColorOscillator implements ITransform<number[]> {
 
   public state = [0, 0, 0];
+  public onComplete: EventEmitter;
   private rOscillator: Oscillator;
   private gOscillator: Oscillator;
   private bOscillator: Oscillator;

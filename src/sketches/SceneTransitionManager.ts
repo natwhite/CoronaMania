@@ -1,7 +1,9 @@
 import {ClickEvent} from '../models/ClickEvent';
 import {DragMouseEvent} from '../models/DragMouseEvent';
 import {Scene} from '../models/Scene';
+import {ITransform} from '../models/Transforms';
 import {Lerp} from '../models/transforms/Lerp';
+import {Sigmoid} from '../models/transforms/Sigmoid';
 
 export class SceneTransitionManager {
 
@@ -13,7 +15,7 @@ export class SceneTransitionManager {
   private nextScene;
   private transitionSpeed = 0.06666;
   private transitioning = false;
-  private lerpTransform;
+  private sceneTransform: ITransform<number>;
   private transitionMultMatrix = [0, 0];
 
   constructor(s, scenes: Scene[]) {
@@ -27,7 +29,11 @@ export class SceneTransitionManager {
     this.currentScene = this.scenes[0];
   }
 
-  public transitionToScene(sceneIndex: number, transitionType: TransitionType) {
+  public transitionToScene(
+    sceneIndex: number,
+    transitionDirection: TransitionDirectionType,
+    transitionType: TransitionType = TransitionType.Sigmoid
+  ) {
     if (sceneIndex >= this.scenes.length) {
       throw new Error(`Requested scene out of range : Scene ${sceneIndex}`);
     } else if (this.scenes[sceneIndex] === this.currentScene) {
@@ -36,29 +42,44 @@ export class SceneTransitionManager {
     console.log(`Transitioning to scene ${sceneIndex}`);
     this.nextScene = this.scenes[sceneIndex];
 
-    switch (transitionType) {
-      case TransitionType.RIGHT:
-        this.lerpTransform = new Lerp(0, -this.width, this.transitionSpeed);
+    const createTransition = (stop: number, type: TransitionType): ITransform<number> => {
+      let transitionFunction: ITransform<number> = null;
+      switch (type) {
+        case TransitionType.Linear:
+          transitionFunction = new Lerp(0, stop, this.transitionSpeed);
+          break;
+        case TransitionType.Sigmoid:
+          transitionFunction = new Sigmoid(0, stop, this.transitionSpeed, 1.5);
+          break;
+      }
+      return transitionFunction;
+    };
+
+    const createTypedTransition = (stop: number) => createTransition(stop, transitionType);
+
+    switch (transitionDirection) {
+      case TransitionDirectionType.RIGHT:
+        this.sceneTransform = createTypedTransition(-this.width);
         this.transitionMultMatrix = [1, 0];
         break;
-      case TransitionType.LEFT:
-        this.lerpTransform = new Lerp(0, this.width, this.transitionSpeed);
+      case TransitionDirectionType.LEFT:
+        this.sceneTransform = createTypedTransition(this.width);
         this.transitionMultMatrix = [-1, 0];
         break;
-      case TransitionType.UP:
-        this.lerpTransform = new Lerp(0, this.height, this.transitionSpeed);
+      case TransitionDirectionType.UP:
+        this.sceneTransform = createTypedTransition(this.height);
         this.transitionMultMatrix = [0, -1];
         break;
-      case TransitionType.DOWN:
-        this.lerpTransform = new Lerp(0, -this.height, this.transitionSpeed);
+      case TransitionDirectionType.DOWN:
+        this.sceneTransform = createTypedTransition(-this.height);
         this.transitionMultMatrix = [0, 1];
         break;
-      case TransitionType.FADEs:
+      case TransitionDirectionType.FADEs:
         throw new Error(`Transition Type not handled`);
         break;
     }
 
-    this.lerpTransform.onComplete.on('completed', () => {
+    this.sceneTransform.onComplete.on('completed', () => {
       console.log(`Transition to Scene ${sceneIndex} complete.`);
       this.currentScene = this.nextScene;
       this.transitioning = false;
@@ -66,7 +87,7 @@ export class SceneTransitionManager {
     this.transitioning = true;
   }
 
-  public setTransitionOnDrag(sceneNum: number, transitionType: TransitionType) {
+  public setTransitionOnDrag(sceneNum: number, transitionType: TransitionDirectionType) {
     throw new Error(`Unhandled Transition Request`);
   }
 
@@ -78,7 +99,7 @@ export class SceneTransitionManager {
 
   public draw = () => {
     if (this.transitioning) {
-      const nextState = this.lerpTransform.nextState();
+      const nextState = this.sceneTransform.nextState();
       this.s.translate(
         nextState * Math.abs(this.transitionMultMatrix[0]),
         nextState * Math.abs(this.transitionMultMatrix[1])
@@ -113,10 +134,15 @@ export class SceneTransitionManager {
   };
 }
 
-export enum TransitionType {
+export enum TransitionDirectionType {
   RIGHT,
   LEFT,
   UP,
   DOWN,
   FADEs
+}
+
+export enum TransitionType {
+  Linear,
+  Sigmoid
 }

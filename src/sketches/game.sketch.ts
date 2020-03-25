@@ -1,7 +1,7 @@
 import {ClickEvent} from '../models/ClickEvent';
 import {DragMouseEvent} from '../models/DragMouseEvent';
 import {TitleScene} from './scenes/titleScene';
-import {SceneTransitionManager, TransitionType} from './SceneTransitionManager';
+import {SceneTransitionManager, TransitionDirectionType, TransitionType} from './SceneTransitionManager';
 
 // Going to need a way to import, obj files.
 // TODO : Rewrite this whole library to meet ES6 standards.
@@ -31,13 +31,15 @@ export const GameSketch = (s) => {
       titleScene1,
       titleScene2
     ]);
+    // TODO : Scene transitions need to be more 'snappy' rather than transitions.
+    // TODO : Resize events don't trigger on unloaded scenes, nor on scene changes.
     titleScene1.onStartClick.on('transition', () => {
       console.log(`Title 1 Transition`);
-      sceneTransitionManager.transitionToScene(1, TransitionType.RIGHT);
+      sceneTransitionManager.transitionToScene(1, TransitionDirectionType.RIGHT);
     });
     titleScene2.onStartClick.on('transition', () => {
       console.log(`Title 2 Transition`);
-      sceneTransitionManager.transitionToScene(0, TransitionType.LEFT);
+      sceneTransitionManager.transitionToScene(0, TransitionDirectionType.LEFT);
     });
 
     canvas = s.createCanvas(width, height, s.WEBGL);

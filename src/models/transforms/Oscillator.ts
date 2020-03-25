@@ -1,8 +1,10 @@
+import {EventEmitter} from 'events';
 import {ITransform} from '../Transforms';
 
 export class Oscillator implements ITransform<number> {
 
   public state = 0;
+  public onComplete: EventEmitter;
   private readonly min;
   private readonly max;
   private readonly baseSpeed;

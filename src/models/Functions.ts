@@ -24,4 +24,9 @@ export class Functions {
     const small = Math.min(min, max);
     return num < small ? small : num > large ? large : num;
   }
+
+  public static sigmoid(x, amp = 1, center = 0, strength = 1) {
+    // console.log(`Sigmoid recieved : ${x},: ${amp},: ${center},: ${strength},`);
+    return amp / (1 + Math.exp(strength * (-x))) + center - amp / 2;
+  }
 }
