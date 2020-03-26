@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import * as p5 from 'p5';
-import {GameSketch} from '../../sketches/game.sketch';
+import {GameSketch} from '../../sketch/game.sketch';
 
 @Component({
   selector: 'app-game-canvas',

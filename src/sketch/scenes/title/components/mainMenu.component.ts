@@ -1,14 +1,15 @@
 import {EventEmitter} from 'events';
-import {ShrinkGrow} from '../models/Animations';
-import {ClickEvent} from '../models/ClickEvent';
-import {DragMouseEvent} from '../models/DragMouseEvent';
-import {Functions} from '../models/Functions';
-import {IInteractiveComponent} from '../models/IInteractiveComponent';
-import {SketchComponent} from '../models/SketchComponent';
-import {Oscillator} from '../models/transforms/Oscillator';
-import {RNGColorOscillator} from '../models/transforms/RNGColorOscillator';
+import {ShrinkGrow} from '../../../core/Animations';
+import {ClickEvent} from '../../../core/event/ClickEvent';
+import {DragMouseEvent} from '../../../core/event/DragMouseEvent';
+import {IInteractiveComponent} from '../../../core/event/IInteractiveComponent';
+import {Functions} from '../../../core/Functions';
+import {SketchComponent} from '../../../core/SketchComponent';
+import {Oscillator} from '../../../core/transforms/Oscillator';
+import {RNGColorOscillator} from '../../../core/transforms/RNGColorOscillator';
 
-export class MainMenuSketch extends SketchComponent implements IInteractiveComponent {
+// TODO : Refactor and split into title and startbutton sketch components.
+export class MainMenuComponent extends SketchComponent implements IInteractiveComponent {
 
   public message = 'Corona Mania!';
   public font;

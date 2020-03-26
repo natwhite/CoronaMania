@@ -1,4 +1,4 @@
-import {SketchComponent} from '../models/SketchComponent';
+import {SketchComponent} from '../../core/SketchComponent';
 
 interface IBackgroundRay {
   color: [number, number, number];

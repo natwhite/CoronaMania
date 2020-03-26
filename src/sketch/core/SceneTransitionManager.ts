@@ -1,9 +1,9 @@
-import {ClickEvent} from '../models/ClickEvent';
-import {DragMouseEvent} from '../models/DragMouseEvent';
-import {Scene} from '../models/Scene';
-import {ITransform} from '../models/Transforms';
-import {Lerp} from '../models/transforms/Lerp';
-import {Sigmoid} from '../models/transforms/Sigmoid';
+import {ClickEvent} from './event/ClickEvent';
+import {DragMouseEvent} from './event/DragMouseEvent';
+import {ITransform} from './ITransform';
+import {Scene} from './Scene';
+import {Lerp} from './transforms/Lerp';
+import {Sigmoid} from './transforms/Sigmoid';
 
 export class SceneTransitionManager {
 

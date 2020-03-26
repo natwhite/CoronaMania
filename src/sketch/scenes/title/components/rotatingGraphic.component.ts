@@ -1,11 +1,11 @@
 import {EventEmitter} from 'events';
-import {ClickEvent} from '../models/ClickEvent';
-import {DragMouseEvent} from '../models/DragMouseEvent';
-import {Functions} from '../models/Functions';
-import {IInteractiveComponent} from '../models/IInteractiveComponent';
-import {SketchComponent} from '../models/SketchComponent';
+import {ClickEvent} from '../../../core/event/ClickEvent';
+import {DragMouseEvent} from '../../../core/event/DragMouseEvent';
+import {IInteractiveComponent} from '../../../core/event/IInteractiveComponent';
+import {Functions} from '../../../core/Functions';
+import {SketchComponent} from '../../../core/SketchComponent';
 
-export class RotatingGraphicSketch extends SketchComponent implements IInteractiveComponent {
+export class RotatingGraphicComponent extends SketchComponent implements IInteractiveComponent {
 
   public rotation = 0;
   public boundsUpdated = false;

@@ -1,6 +1,6 @@
 import {EventEmitter} from 'events';
 import {Functions} from '../Functions';
-import {ITransform} from '../Transforms';
+import {ITransform} from '../ITransform';
 
 export class Sigmoid implements ITransform<number> {
   public state: number;

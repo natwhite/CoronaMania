@@ -1,5 +1,5 @@
 import {EventEmitter} from 'events';
-import {ITransform} from '../Transforms';
+import {ITransform} from '../ITransform';
 
 export class Oscillator implements ITransform<number> {
 

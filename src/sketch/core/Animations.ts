@@ -4,6 +4,7 @@ export interface IAnimation {
   nextState();
 }
 
+// TODO : Either merge with ITransforms or separate functionality.
 export class ShrinkGrow implements IAnimation {
   public oscillator;
   public s;

@@ -1,8 +1,8 @@
-import {ClickEvent} from './ClickEvent';
-import {DragMouseEvent} from './DragMouseEvent';
-import {IInteractiveComponent} from './IInteractiveComponent';
+import {ClickEvent} from './event/ClickEvent';
+import {DragMouseEvent} from './event/DragMouseEvent';
+import {IInteractiveComponent} from './event/IInteractiveComponent';
+import {SketchEventHandler} from './event/SketchEventHandler';
 import {SketchComponent} from './SketchComponent';
-import {SketchEventHandler} from './SketchEventHandler';
 
 export class SketchComponentManager {
   public s;

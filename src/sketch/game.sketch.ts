@@ -1,7 +1,8 @@
-import {ClickEvent} from '../models/ClickEvent';
-import {DragMouseEvent} from '../models/DragMouseEvent';
-import {TitleScene} from './scenes/titleScene';
-import {SceneTransitionManager, TransitionDirectionType, TransitionType} from './SceneTransitionManager';
+import {ClickEvent} from './core/event/ClickEvent';
+import {DragMouseEvent} from './core/event/DragMouseEvent';
+import {SceneTransitionManager, TransitionDirectionType} from './core/SceneTransitionManager';
+import {OptionsScene} from './scenes/options/options.scene';
+import {TitleScene} from './scenes/title/title.scene';
 
 // Going to need a way to import, obj files.
 // TODO : Rewrite this whole library to meet ES6 standards.
@@ -26,7 +27,7 @@ export const GameSketch = (s) => {
     s.frameRate(30);
 
     const titleScene1 = new TitleScene(s);
-    const titleScene2 = new TitleScene(s);
+    const titleScene2 = new OptionsScene(s);
     sceneTransitionManager = new SceneTransitionManager(s, [
       titleScene1,
       titleScene2

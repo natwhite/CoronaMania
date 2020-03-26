@@ -1,4 +1,4 @@
-import {ResizableComponent} from './ResizableComponent';
+import {ResizableComponent} from './event/ResizableComponent';
 
 export abstract class SketchComponent extends ResizableComponent {
   public layered;
