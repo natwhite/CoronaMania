@@ -3,24 +3,25 @@ import {Scene} from '../../core/Scene';
 import {BackgroundGraphics} from '../../global/components/backgroundGraphics.component';
 import {LogoComponent} from '../title/components/logo.component';
 import {RotatingGraphicComponent} from '../title/components/rotatingGraphic.component';
-import {StartButtonComponent} from '../title/components/startButton.component';
+import {BackButtonComponent} from './components/backButton.component';
+import {OptionsTitleComponent} from './components/optionsTitle.component';
 
 export class OptionsScene extends Scene {
   public onStartClick: EventEmitter = new EventEmitter();
 
   constructor(s) {
     super(s);
-    const startButtonComponent = new StartButtonComponent(s, this.width, this.height);
-    startButtonComponent.onInteraction.on('click', () => {
-      console.log(`Got click from MainMenu`);
+    const backButtonComponent = new BackButtonComponent(s, this.width, this.height);
+    backButtonComponent.onInteraction.on('click', () => {
+      console.log(`Got click from backButton`);
       this.onStartClick.emit('transition');
     });
     this.componentManager.addComponents([
       new BackgroundGraphics(s, this.width, this.height),
-      // MenuController,
       new RotatingGraphicComponent(s, this.width, this.height),
+      new OptionsTitleComponent(s, this.width, this.height),
       new LogoComponent(s, this.width, this.height),
-      startButtonComponent
+      backButtonComponent
     ]);
   }
 }

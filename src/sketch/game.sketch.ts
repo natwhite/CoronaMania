@@ -36,11 +36,11 @@ export const GameSketch = (s) => {
     // TODO : Resize events don't trigger on unloaded scenes, nor on scene changes.
     titleScene1.onStartClick.on('transition', () => {
       console.log(`Title 1 Transition`);
-      sceneTransitionManager.transitionToScene(1, TransitionDirectionType.RIGHT);
+      sceneTransitionManager.transitionToScene(1, TransitionDirectionType.LEFT);
     });
     titleScene2.onStartClick.on('transition', () => {
       console.log(`Title 2 Transition`);
-      sceneTransitionManager.transitionToScene(0, TransitionDirectionType.LEFT);
+      sceneTransitionManager.transitionToScene(0, TransitionDirectionType.RIGHT);
     });
 
     canvas = s.createCanvas(width, height, s.WEBGL);

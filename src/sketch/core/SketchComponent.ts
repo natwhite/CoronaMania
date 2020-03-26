@@ -1,5 +1,6 @@
 import {ResizableComponent} from './event/ResizableComponent';
 
+// TODO : Refactor to pass components a constructed graphic rather than source instance. (Encapsulation)
 export abstract class SketchComponent extends ResizableComponent {
   public layered;
   public renderer;
@@ -50,8 +51,4 @@ export abstract class SketchComponent extends ResizableComponent {
       this.onResize(this.width, this.height);
     }
   };
-
-  public setRendering(state: boolean) {
-    this.rendering = state;
-  }
 }

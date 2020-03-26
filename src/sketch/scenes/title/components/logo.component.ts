@@ -1,5 +1,4 @@
 import {EventEmitter} from 'events';
-import {ShrinkGrow} from '../../../core/Animations';
 import {SketchComponent} from '../../../core/SketchComponent';
 import {Oscillator} from '../../../core/transforms/Oscillator';
 import {RNGColorOscillator} from '../../../core/transforms/RNGColorOscillator';
@@ -10,7 +9,6 @@ export class LogoComponent extends SketchComponent {
   public message = 'Corona Mania!';
   public font;
   public logoRadius = 500;
-  public startButtonShrinkGrow;
   public logoOscillator;
   public logoColorOscillator;
   public logoOscillationRange = 0.01;
@@ -27,7 +25,6 @@ export class LogoComponent extends SketchComponent {
     // The text must be centered!
     this.renderer.textAlign(this.renderer.CENTER);
     this.renderer.smooth();
-    this.startButtonShrinkGrow = new ShrinkGrow(this.renderer, 1, 1.2, 1);
     this.logoOscillator = new Oscillator(
       1 - this.logoOscillationRange,
       1 + this.logoOscillationRange,
