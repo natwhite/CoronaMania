@@ -20,7 +20,6 @@ export class StartButtonComponent extends SketchComponent implements IInteractiv
     super(s, w, h, true, s.P2D);
 
     this.renderer.textAlign(this.renderer.CENTER);
-    this.renderer.smooth();
     this.startButtonShrinkGrow = new ShrinkGrow(this.renderer, 1, 1.2, 1);
   }
 

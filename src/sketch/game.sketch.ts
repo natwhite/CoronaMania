@@ -1,6 +1,7 @@
 import {ClickEvent} from './core/event/ClickEvent';
 import {DragMouseEvent} from './core/event/DragMouseEvent';
 import {SceneTransitionManager, TransitionDirectionType} from './core/SceneTransitionManager';
+import {BackgroundGraphics} from './global/components/backgroundGraphics.component';
 import {OptionsScene} from './scenes/options/options.scene';
 import {TitleScene} from './scenes/title/title.scene';
 
@@ -15,6 +16,7 @@ export const GameSketch = (s) => {
   let dragStart: ClickEvent;
   let ready = false;
   let sceneTransitionManager: SceneTransitionManager;
+  let backgroundGraphics;
 
   s.preload = () => {
     return;
@@ -26,20 +28,20 @@ export const GameSketch = (s) => {
     height = s.windowHeight;
     s.frameRate(30);
 
-    const titleScene1 = new TitleScene(s);
-    const titleScene2 = new OptionsScene(s);
+    const title = new TitleScene(s);
+    const options = new OptionsScene(s);
+
     sceneTransitionManager = new SceneTransitionManager(s, [
-      titleScene1,
-      titleScene2
+      title,
+      options
     ]);
+    sceneTransitionManager.setTransitionOnDrag(0, 1, TransitionDirectionType.RIGHT);
     // TODO : Scene transitions need to be more 'snappy' rather than transitions.
     // TODO : Resize events don't trigger on unloaded scenes, nor on scene changes.
-    titleScene1.onStartClick.on('transition', () => {
-      console.log(`Title 1 Transition`);
+    title.onClick.on('transition', () => {
       sceneTransitionManager.transitionToScene(1, TransitionDirectionType.LEFT);
     });
-    titleScene2.onStartClick.on('transition', () => {
-      console.log(`Title 2 Transition`);
+    options.onClick.on('transition', () => {
       sceneTransitionManager.transitionToScene(0, TransitionDirectionType.RIGHT);
     });
 
@@ -48,6 +50,8 @@ export const GameSketch = (s) => {
     canvas.mouseOver(() => {
       console.log('GameManager: Mouse Over');
     });
+
+    backgroundGraphics = new BackgroundGraphics(s, width, height);
 
     sceneTransitionManager.initialize();
     ready = true;
@@ -74,10 +78,9 @@ export const GameSketch = (s) => {
 
   s.draw = () => {
     s.background(0);
+    backgroundGraphics.render();
     s.renderMouse();
     if (dragging) {
-      const x = s.constrain(s.mouseX, 0, width);
-      s.translate(x - dragStart.x, 0);
       sceneTransitionManager.handleMouseDrag(new DragMouseEvent(s, dragStart.x, dragStart.y));
     }
     sceneTransitionManager.draw();
@@ -131,6 +134,7 @@ export const GameSketch = (s) => {
     height = s.windowHeight;
 
     s.resizeCanvas(width, height);
+    backgroundGraphics.handleResize(width, height);
     sceneTransitionManager.handleCanvasResize(width, height);
   };
 };

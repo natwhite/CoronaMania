@@ -5,7 +5,6 @@ import {IInteractiveComponent} from '../../../core/event/IInteractiveComponent';
 import {SketchComponent} from '../../../core/SketchComponent';
 
 export class BackButtonComponent extends SketchComponent implements IInteractiveComponent {
-
   public onInteraction: EventEmitter = new EventEmitter();
   private readonly message = 'Back';
   private readonly font;
@@ -20,7 +19,6 @@ export class BackButtonComponent extends SketchComponent implements IInteractive
     this.font = s.loadFont('../assets/NanotechLlc-ed2B.otf');
     this.renderer.textFont(this.font, 100);
     this.renderer.textAlign(this.renderer.CENTER);
-    this.renderer.smooth();
   }
 
   public createGraphic = () => {

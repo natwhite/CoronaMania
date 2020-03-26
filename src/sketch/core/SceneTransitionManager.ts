@@ -1,5 +1,6 @@
 import {ClickEvent} from './event/ClickEvent';
 import {DragMouseEvent} from './event/DragMouseEvent';
+import {Functions} from './Functions';
 import {ITransform} from './ITransform';
 import {Scene} from './Scene';
 import {Lerp} from './transforms/Lerp';
@@ -8,15 +9,17 @@ import {Sigmoid} from './transforms/Sigmoid';
 export class SceneTransitionManager {
 
   private readonly s;
-  private width;
-  private height;
-  private readonly scenes;
-  private currentScene;
-  private nextScene;
+  private width: number;
+  private height: number;
+  private readonly scenes: Array<{ dragMap: ISceneDragMap, scene: Scene }>;
+  private currentSceneIndex: number;
+  private currentScene: Scene;
+  private nextScene: Scene;
   private transitionSpeed = 0.06666;
   private transitioning = false;
   private sceneTransform: ITransform<number>;
   private transitionMultMatrix = [0, 0];
+  private draggableTransitionsDefined = false;
 
   constructor(s, scenes: Scene[]) {
     if (scenes.length <= 0) {
@@ -25,8 +28,12 @@ export class SceneTransitionManager {
     this.s = s;
     this.width = s.windowWidth;
     this.height = s.windowHeight;
-    this.scenes = scenes;
-    this.currentScene = this.scenes[0];
+    this.scenes = scenes.map((scene, index) => ({
+      dragMap: {index} as ISceneDragMap,
+      scene
+    }));
+    this.currentScene = this.scenes[0].scene;
+    this.currentSceneIndex = 0;
   }
 
   public transitionToScene(
@@ -36,11 +43,14 @@ export class SceneTransitionManager {
   ) {
     if (sceneIndex >= this.scenes.length) {
       throw new Error(`Requested scene out of range : Scene ${sceneIndex}`);
-    } else if (this.scenes[sceneIndex] === this.currentScene) {
+    } else if (this.scenes[sceneIndex].scene === this.currentScene) {
       throw new Error(`Cannot transition to the same scene.`);
     }
     console.log(`Transitioning to scene ${sceneIndex}`);
-    this.nextScene = this.scenes[sceneIndex];
+    this.nextScene = this.scenes[sceneIndex].scene;
+    // TODO : The resize on transition isn't as smooth as I'd like.
+    // TODO : Find a way to handle resized selectively while avoiding a hitmap update.
+    this.nextScene.handleCanvasResize(this.width, this.height);
 
     const createTransition = (stop: number, type: TransitionType): ITransform<number> => {
       let transitionFunction: ITransform<number> = null;
@@ -74,26 +84,42 @@ export class SceneTransitionManager {
         this.sceneTransform = createTypedTransition(-this.height);
         this.transitionMultMatrix = [0, 1];
         break;
-      case TransitionDirectionType.FADEs:
-        throw new Error(`Transition Type not handled`);
-        break;
     }
 
     this.sceneTransform.onComplete.on('completed', () => {
       console.log(`Transition to Scene ${sceneIndex} complete.`);
       this.currentScene = this.nextScene;
+      this.currentSceneIndex = sceneIndex;
       this.transitioning = false;
     });
     this.transitioning = true;
   }
 
-  public setTransitionOnDrag(sceneNum: number, transitionType: TransitionDirectionType) {
-    throw new Error(`Unhandled Transition Request`);
+  public setTransitionOnDrag(fromScene: number, toScene: number, transitionType: TransitionDirectionType) {
+    this.draggableTransitionsDefined = true;
+
+    // TODO : POC implementation in desperate need of a refactor.
+    switch (transitionType) {
+      case TransitionDirectionType.RIGHT:
+        this.scenes[fromScene].dragMap.RIGHT = this.scenes[fromScene].dragMap;
+        break;
+      case TransitionDirectionType.LEFT:
+        this.scenes[fromScene].dragMap.LEFT = this.scenes[fromScene].dragMap;
+        break;
+      case TransitionDirectionType.UP:
+        this.scenes[fromScene].dragMap.UP = this.scenes[fromScene].dragMap;
+        break;
+      case TransitionDirectionType.DOWN:
+        this.scenes[fromScene].dragMap.DOWN = this.scenes[fromScene].dragMap;
+        break;
+
+    }
+    // throw new Error(`Unhandled Transition Request`);
   }
 
   public initialize = () => {
     for (const scene of this.scenes) {
-      scene.initialize();
+      scene.scene.initialize();
     }
   };
 
@@ -116,14 +142,23 @@ export class SceneTransitionManager {
   };
 
   public handleClick = (clickEvent: ClickEvent) => {
+    if (this.transitioning) {
+      return;
+    }
     this.currentScene.handleClick(clickEvent);
   };
 
   public handleHover = (clickEvent: ClickEvent) => {
+    if (this.transitioning) {
+      return;
+    }
     this.currentScene.handleHover(clickEvent);
   };
 
   public handleMouseDrag = (dragEvent: DragMouseEvent) => {
+    if (this.draggableTransitionsDefined) {
+      // this.currentScene.translate(dragEvent.x2 - dragEvent.x1, 0);
+    }
     this.currentScene.handleMouseDrag(dragEvent);
   };
 
@@ -139,10 +174,17 @@ export enum TransitionDirectionType {
   LEFT,
   UP,
   DOWN,
-  FADEs
 }
 
 export enum TransitionType {
   Linear,
   Sigmoid
+}
+
+export interface ISceneDragMap {
+  index: number;
+  RIGHT: ISceneDragMap;
+  LEFT: ISceneDragMap;
+  UP: ISceneDragMap;
+  DOWN: ISceneDragMap;
 }

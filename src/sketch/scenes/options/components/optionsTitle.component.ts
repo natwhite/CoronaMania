@@ -15,7 +15,6 @@ export class OptionsTitleComponent extends SketchComponent {
     this.font = s.loadFont('../assets/NanotechLlc-ed2B.otf');
     this.renderer.textFont(this.font, 100);
     this.renderer.textAlign(this.renderer.CENTER);
-    this.renderer.smooth();
   }
 
   public createGraphic = () => {

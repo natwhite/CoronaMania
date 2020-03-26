@@ -24,7 +24,7 @@ export class LogoComponent extends SketchComponent {
     this.renderer.textFont(this.font, 100);
     // The text must be centered!
     this.renderer.textAlign(this.renderer.CENTER);
-    this.renderer.smooth();
+    // this.renderer.smooth();
     this.logoOscillator = new Oscillator(
       1 - this.logoOscillationRange,
       1 + this.logoOscillationRange,
