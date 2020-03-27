@@ -1,10 +1,9 @@
 import {EventEmitter} from 'events';
 import {Scene} from '../../core/Scene';
-import {BackgroundGraphics} from '../../global/components/backgroundGraphics.component';
-import {LogoComponent} from '../title/components/logo.component';
-import {RotatingGraphicComponent} from '../title/components/rotatingGraphic.component';
 import {BackButtonComponent} from './components/backButton.component';
+import {CreditsComponent} from './components/credits.component';
 import {OptionsTitleComponent} from './components/optionsTitle.component';
+import {VolumeComponent} from './components/volume.component';
 
 export class OptionsScene extends Scene {
   public onClick: EventEmitter = new EventEmitter();
@@ -17,10 +16,9 @@ export class OptionsScene extends Scene {
       this.onClick.emit('transition');
     });
     this.componentManager.addComponents([
-      // new BackgroundGraphics(s, this.width, this.height),
-      new RotatingGraphicComponent(s, this.width, this.height),
       new OptionsTitleComponent(s, this.width, this.height),
-      new LogoComponent(s, this.width, this.height),
+      new VolumeComponent(s, this.width, this.height),
+      new CreditsComponent(s, this.width, this.height),
       backButtonComponent
     ]);
   }

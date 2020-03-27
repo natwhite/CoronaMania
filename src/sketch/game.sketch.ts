@@ -35,7 +35,8 @@ export const GameSketch = (s) => {
       title,
       options
     ]);
-    sceneTransitionManager.setTransitionOnDrag(0, 1, TransitionDirectionType.RIGHT);
+    sceneTransitionManager.setTransitionOnDrag(0, 1, TransitionDirectionType.LEFT);
+    sceneTransitionManager.setTransitionOnDrag(1, 0, TransitionDirectionType.RIGHT);
     // TODO : Scene transitions need to be more 'snappy' rather than transitions.
     // TODO : Resize events don't trigger on unloaded scenes, nor on scene changes.
     title.onClick.on('transition', () => {
@@ -81,7 +82,10 @@ export const GameSketch = (s) => {
     backgroundGraphics.render();
     s.renderMouse();
     if (dragging) {
-      sceneTransitionManager.handleMouseDrag(new DragMouseEvent(s, dragStart.x, dragStart.y));
+      const dragMouseEvent = new DragMouseEvent(s, dragStart.x, dragStart.y);
+      if (Math.abs(dragMouseEvent.deltaX) + Math.abs(dragMouseEvent.deltaY) > 10) {
+        sceneTransitionManager.handleMouseDrag(dragMouseEvent);
+      }
     }
     sceneTransitionManager.draw();
   };
@@ -112,6 +116,7 @@ export const GameSketch = (s) => {
 
   s.mouseReleased = () => {
     dragging = false;
+    sceneTransitionManager.handleMouseRelease(new ClickEvent(s));
   };
 
   s.keyTyped = () => {

@@ -13,14 +13,14 @@ export class Sigmoid implements ITransform<number> {
   private readonly completeRange: number;
   private readonly completePercent = 0.01;
 
-  constructor(start: number, stop: number, delta: number, strength: number = 1) {
+  constructor(start: number, stop: number, delta: number, strength: number = 1, initialPercent = 0) {
     this.start = start;
     this.stop = stop;
     this.spread = 5.0 / strength;
     this.completeRange = Math.abs(this.stop - this.start) * this.completePercent;
     this.delta = delta * (this.spread * 2);
     this.strength = strength;
-    this.state = -this.spread;
+    this.state = -this.spread + 2 * this.spread * initialPercent;
   }
 
   public nextState(): number {
