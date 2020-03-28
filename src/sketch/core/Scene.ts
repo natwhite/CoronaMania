@@ -8,10 +8,10 @@ export abstract class Scene {
   public height;
   public componentManager;
 
-  protected constructor(s) {
+  protected constructor(s, width: number = null, height: number = null) {
     this.s = s;
-    this.width = s.windowWidth;
-    this.height = s.windowHeight;
+    this.width = width ? width : s.windowWidth;
+    this.height = height ? height : s.windowHeight;
     this.componentManager = new SketchComponentManager(s, this.width, this.height);
   }
 

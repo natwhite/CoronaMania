@@ -14,7 +14,7 @@ export class SketchComponentManager {
   public resizeDebounceTime = 250;
   public timeSinceResizeRequest = 0;
   public requireResize = true;
-  public debugMode = false;
+  // public debugMode = true;
 
   constructor(s, width: number, height: number) {
     this.s = s;
@@ -80,9 +80,9 @@ export class SketchComponentManager {
       }
     }
 
-    if (this.debugMode) {
-      this.debugHitBoxes();
-    }
+    // if (this.debugMode) {
+    //   this.debugHitBoxes();
+    // }
   };
 
   public resizeCanvas() {
@@ -111,11 +111,11 @@ export class SketchComponentManager {
     this.eventHandler.handleMouseDrag(dragEvent);
   };
 
-  public enableDebugMode = (state: boolean) => {
-    this.debugMode = state;
-  };
+  // public enableDebugMode = (state: boolean) => {
+  //   this.debugMode = state;
+  // };
 
-  public debugHitBoxes = () => {
-    this.eventHandler.debugHitBoxes();
-  };
+  // public debugHitBoxes = () => {
+  //   this.eventHandler.debugHitBoxes();
+  // };
 }

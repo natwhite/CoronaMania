@@ -8,8 +8,8 @@ import {VolumeComponent} from './components/volume.component';
 export class OptionsScene extends Scene {
   public onClick: EventEmitter = new EventEmitter();
 
-  constructor(s) {
-    super(s);
+  constructor(s, width: number, height: number) {
+    super(s, width, height);
     const backButtonComponent = new BackButtonComponent(s, this.width, this.height);
     backButtonComponent.onInteraction.on('click', () => {
       console.log(`Got click from backButton`);

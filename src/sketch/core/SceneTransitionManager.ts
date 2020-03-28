@@ -7,7 +7,6 @@ import {Lerp} from './transforms/Lerp';
 import {Sigmoid} from './transforms/Sigmoid';
 
 export class SceneTransitionManager {
-
   private readonly s;
   private width: number;
   private height: number;
@@ -22,13 +21,13 @@ export class SceneTransitionManager {
   private transitionDragEvent: DragMouseEvent;
   private transitionTriggerPercent = 0.3;
 
-  constructor(s, scenes: Scene[]) {
+  constructor(s, scenes: Scene[], width: number = null, height: number = null) {
     if (scenes.length <= 0) {
       throw new Error(`Tried to create a SceneTransitionManager with no scenes!`);
     }
     this.s = s;
-    this.width = s.windowWidth;
-    this.height = s.windowHeight;
+    this.width = width ? width : s.windowWidth;
+    this.height = height ? height : s.windowHeight;
     this.scenes = scenes.map((scene, index) => ({
       dragMap: {index} as ISceneDragMap,
       scene

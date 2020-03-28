@@ -5,7 +5,7 @@ import {ResizableComponent} from './ResizableComponent';
 
 export class SketchEventHandler {
   public collisionMap;
-  private debugLayer;
+  // private debugLayer;
   private s;
   private components: IInteractiveComponent[] = [];
   private callbackMap: { [color: number]: IInteractiveComponent } = {};
@@ -29,6 +29,7 @@ export class SketchEventHandler {
     }
   };
 
+  // TODO : refactor to cycle through hit-box functions rather than a hitmap for memory purposes.
   public updateCollisionMap = () => {
     console.log(`SketchEventHandler: Updating collision map`);
 
@@ -37,6 +38,7 @@ export class SketchEventHandler {
     this.collisionMap.noStroke();
     // this.collisionMap.blendMode(this.s.REPLACE);
 
+    // TODO : scaling needs to be applied to the collision map as well.
     for (const component of this.components) {
       this.collisionMap.push();
       this.collisionMap.fill(this.colorIndex);
@@ -45,13 +47,13 @@ export class SketchEventHandler {
       this.callbackMap[this.colorIndex--] = component;
     }
 
-    // this.collisionMap.blendMode(this.s.ADD);
+    // TODO : commented for efficiency
     this.collisionMap.loadPixels();
-    // this.collisionMapPixels = this.collisionMap.pixels;
 
-    const debugCanvas = this.s.createGraphics(this.s.width, this.s.height);
-    debugCanvas.background(255);
-    (this.debugLayer = this.collisionMap.get()).mask(debugCanvas.get());
+    // const debugCanvas = this.s.createGraphics(this.collisionMap.width, this.collisionMap.height);
+    // debugCanvas.background(255);
+    // this.debugLayer = this.collisionMap.get();
+    // (this.debugLayer = this.collisionMap.get()).mask(debugCanvas.get());
   };
 
   public queryHitMap = (x: number, y: number): IInteractiveComponent | undefined => {
@@ -106,9 +108,10 @@ export class SketchEventHandler {
     this.updateCollisionMap();
   };
 
-  public debugHitBoxes = () => {
-    this.s.image(this.debugLayer, -this.s.width / 2, -this.s.height / 2);
-  };
+  // public debugHitBoxes = () => {
+  //   // this.s.image(1 / 0.571);
+  //   this.s.image(this.debugLayer, -this.s.width / 2, -this.s.height / 2);
+  // };
 
   public handleMouseDrag(dragEvent: DragMouseEvent) {
     for (const component of this.components) {

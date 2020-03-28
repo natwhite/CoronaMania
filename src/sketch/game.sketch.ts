@@ -19,28 +19,35 @@ export const GameSketch = (s) => {
   let ready = false;
   let sceneTransitionManager: SceneTransitionManager;
   let backgroundGraphics;
+  let scale = 1;
 
   s.preload = () => {
+    console.log(`Width : ${s.windowWidth}`);
+    scale = s.windowWidth / 1000;
     return;
   };
 
   s.setup = () => {
     // s.createCanvas(width, height, s.WEBGL);
-    width = s.windowWidth;
-    height = s.windowHeight;
+    console.log(`Scale : ${scale}`);
+    width = Math.floor(s.windowWidth / scale);
+    height = Math.floor(s.windowHeight / scale);
     s.frameRate(30);
 
-    const title = new TitleScene(s);
-    const options = new OptionsScene(s);
-    const rewards = new RewardsScene(s);
-    const levelSelect = new LevelSelectScene(s);
+    const title = new TitleScene(s, width, height);
+    const options = new OptionsScene(s, width, height);
+    const rewards = new RewardsScene(s, width, height);
+    const levelSelect = new LevelSelectScene(s, width, height);
 
     sceneTransitionManager = new SceneTransitionManager(s, [
-      title,
-      options,
-      rewards,
-      levelSelect
-    ]);
+        title,
+        options,
+        rewards,
+        levelSelect
+      ],
+      width,
+      height
+    );
     sceneTransitionManager.setTransitionOnDrag(0, 1, TransitionDirectionType.LEFT);
     sceneTransitionManager.setTransitionOnDrag(1, 0, TransitionDirectionType.RIGHT);
 
@@ -69,6 +76,7 @@ export const GameSketch = (s) => {
 
     backgroundGraphics = new BackgroundGraphics(s, width, height);
 
+    s.resizeCanvas(s.windowWidth, s.windowHeight, false);
     sceneTransitionManager.initialize();
     ready = true;
 
@@ -81,11 +89,10 @@ export const GameSketch = (s) => {
     s.stroke(0);
     s.strokeWeight(10);
     s.fill(0);
-    const x = s.constrain(s.mouseX, 0, width);
-    const y = s.constrain(s.mouseY, 0, height);
-    s.ellipse(x, y, 15, 15);
+    const mouse = new ClickEvent(s, width, height, scale);
+    s.ellipse(mouse.x, mouse.y, 15, 15);
     if (dragging) {
-      s.line(dragStart.x, dragStart.y, x, y);
+      s.line(dragStart.x, dragStart.y, mouse.x, mouse.y);
       s.ellipse(dragStart.x, dragStart.y, 15, 15);
       // console.log(`Drawing line ${dragStart.x}, ${dragStart.y}`);
     }
@@ -93,11 +100,12 @@ export const GameSketch = (s) => {
   };
 
   s.draw = () => {
+    s.scale(scale);
     s.background(0);
     backgroundGraphics.render();
     s.renderMouse();
     if (dragging) {
-      const dragMouseEvent = new DragMouseEvent(s, dragStart.x, dragStart.y);
+      const dragMouseEvent = new DragMouseEvent(s, dragStart.x, dragStart.y, width, height, scale);
       if (Math.abs(dragMouseEvent.deltaX) + Math.abs(dragMouseEvent.deltaY) > 10) {
         sceneTransitionManager.handleMouseDrag(dragMouseEvent);
       }
@@ -109,14 +117,21 @@ export const GameSketch = (s) => {
     if (!ready) {
       return;
     }
-    sceneTransitionManager.handleHover(new ClickEvent(s));
+    sceneTransitionManager.handleHover(new ClickEvent(s, width, height, scale));
   };
 
   s.mousePressed = () => {
     if (!ready) {
       return;
     }
-    sceneTransitionManager.handleClick(new ClickEvent(s));
+    sceneTransitionManager.handleClick(new ClickEvent(s, width, height, scale));
+  };
+
+  s.touchStarted = () => {
+    if (!ready) {
+      return;
+    }
+    sceneTransitionManager.handleClick(new ClickEvent(s, width, height, scale));
   };
 
   s.touchMoved = () => {
@@ -124,14 +139,14 @@ export const GameSketch = (s) => {
       return;
     }
     if (!dragging) {
-      dragStart = new ClickEvent(s);
+      dragStart = new ClickEvent(s, width, height, scale);
     }
     dragging = true;
   };
 
   s.mouseReleased = () => {
     dragging = false;
-    sceneTransitionManager.handleMouseRelease(new ClickEvent(s));
+    sceneTransitionManager.handleMouseRelease(new ClickEvent(s, width, height, scale));
   };
 
   s.keyTyped = () => {
@@ -150,10 +165,12 @@ export const GameSketch = (s) => {
     if (!ready) {
       return;
     }
-    width = s.windowWidth;
-    height = s.windowHeight;
+    // width = s.windowWidth;
+    // height = s.windowHeight;
+    s.resizeCanvas(s.windowWidth, s.windowHeight);
 
-    s.resizeCanvas(width, height);
+    width = Math.floor(s.windowWidth / scale);
+    height = Math.floor(s.windowHeight / scale);
     backgroundGraphics.handleResize(width, height);
     sceneTransitionManager.handleCanvasResize(width, height);
   };
