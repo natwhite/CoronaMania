@@ -48,7 +48,7 @@ export class SketchEventHandler {
     }
 
     // TODO : commented for efficiency
-    this.collisionMap.loadPixels();
+    // this.collisionMap.loadPixels();
 
     // const debugCanvas = this.s.createGraphics(this.collisionMap.width, this.collisionMap.height);
     // debugCanvas.background(255);
@@ -59,9 +59,10 @@ export class SketchEventHandler {
   public queryHitMap = (x: number, y: number): IInteractiveComponent | undefined => {
     // The first four values (indices 0-3) in the array will be the R, G, B, A values of the pixel at (0, 0).
     // The second four values (indices 4-7) will contain the R, G, B, A values of the pixel at (1, 0).
-    const pixelIndex = 4 * (y * this.collisionMap.width + x);
-    const hitColor = this.collisionMap.pixels[pixelIndex];
-    // console.log(`Color was ${hitColor} at ${pixelIndex} of ${this.collisionMap.pixels.length}`);
+    // const pixelIndex = 4 * (y * this.collisionMap.width + x);
+    const hitColor = this.collisionMap.get(x, y)[0];
+    // const hitColor = this.collisionMap.pixels[pixelIndex];
+    // console.log(`Color was ${hitColor} at ${x}, ${y} mapping to ${this.callbackMap}`);
     return this.callbackMap[hitColor];
   };
 
