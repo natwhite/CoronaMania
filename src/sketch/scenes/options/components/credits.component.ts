@@ -5,10 +5,10 @@ export class CreditsComponent extends SketchComponent {
   public onInteraction: EventEmitter = new EventEmitter();
   private readonly title = 'Credits';
   private readonly people: Array<{ name: string, title: string }> = [
-    {name: 'Person 1', title: 'Good person'},
-    {name: 'Person 2', title: 'Good person'},
-    {name: 'Person 3', title: 'Good person'},
-    {name: 'Person 4', title: 'Good person'},
+    {name: 'Person one', title: 'Good person'},
+    {name: 'Person two', title: 'Good person'},
+    {name: 'Person three', title: 'Good person'},
+    {name: 'Person four', title: 'Good person'},
   ];
   private readonly font;
   private readonly titleFontSize = 80;
@@ -17,7 +17,7 @@ export class CreditsComponent extends SketchComponent {
   constructor(s, w, h) {
     super(s, w, h, true, s.P2D);
 
-    this.font = s.loadFont('../assets/NanotechLlc-ed2B.otf');
+    this.font = s.loadFont('../assets/ttg_by_westralinc-dbnnkt8.ttf');
     this.renderer.textFont(this.font, 100);
   }
 

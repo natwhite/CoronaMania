@@ -10,7 +10,7 @@ export class VolumeComponent extends SketchComponent {
   constructor(s, w, h) {
     super(s, w, h, true, s.P2D);
 
-    this.font = s.loadFont('../assets/NanotechLlc-ed2B.otf');
+    this.font = s.loadFont('../assets/ttg_by_westralinc-dbnnkt8.ttf');
     this.renderer.textFont(this.font, 100);
   }
 

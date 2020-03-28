@@ -11,14 +11,18 @@ export class StartButtonComponent extends SketchComponent implements IInteractiv
 
   public startButtonShrinkGrow;
   public startButtonColor = [0, 0, 0];
-  public outlineColor = 0;
+  public displayOutline = false;
+  public outlineColor = 255;
   public startButtonHovered = false;
 
   public onInteraction: EventEmitter = new EventEmitter();
+  private font;
 
   constructor(s, w, h) {
     super(s, w, h, true, s.P2D);
 
+    this.font = s.loadFont('../assets/ttg_by_westralinc-dbnnkt8.ttf');
+    this.renderer.textFont(this.font, 100);
     this.renderer.textAlign(this.renderer.CENTER);
     this.startButtonShrinkGrow = new ShrinkGrow(this.renderer, 1, 1.2, 1);
   }
@@ -35,8 +39,11 @@ export class StartButtonComponent extends SketchComponent implements IInteractiv
     }
 
     this.renderer.fill(this.startButtonColor);
-    this.renderer.strokeWeight(4);
     this.renderer.stroke(this.outlineColor);
+    this.renderer.strokeWeight(4);
+    if (this.displayOutline) {
+      this.renderer.strokeWeight(6);
+    }
     this.renderer.textSize(80);
     this.renderer.text('Tap To Start!', 0, 0);
     this.renderer.pop();
@@ -56,12 +63,12 @@ export class StartButtonComponent extends SketchComponent implements IInteractiv
   }
 
   public onHover() {
-    this.outlineColor = 255;
+    this.displayOutline = true;
     this.startButtonHovered = true;
   }
 
   public onHoverLost() {
-    this.outlineColor = 0;
+    this.displayOutline = false;
     this.startButtonHovered = false;
   }
 

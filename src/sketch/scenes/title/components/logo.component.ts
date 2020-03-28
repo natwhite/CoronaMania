@@ -20,7 +20,7 @@ export class LogoComponent extends SketchComponent {
   constructor(s, w, h) {
     super(s, w, h, true, s.P2D);
 
-    this.font = s.loadFont('../assets/NanotechLlc-ed2B.otf');
+    this.font = s.loadFont('../assets/ttg_by_westralinc-dbnnkt8.ttf');
     this.renderer.textFont(this.font, 100);
     // The text must be centered!
     this.renderer.textAlign(this.renderer.CENTER);
@@ -41,7 +41,6 @@ export class LogoComponent extends SketchComponent {
     this.logoColorOscillator.nextState();
 
     this.renderer.fill(0);
-    // this.renderer.fill(Functions.getRandomColor());
     for (let i = 0; i < this.message.length; i++) {
       const currentChar = this.message.charAt(i);
       const w = this.renderer.textWidth(currentChar);
@@ -52,6 +51,8 @@ export class LogoComponent extends SketchComponent {
       this.renderer.push();
       this.renderer.translate(this.logoRadius * this.renderer.cos(theta), localRadius * this.renderer.sin(theta));
       this.renderer.rotate(theta + this.renderer.PI / 2);
+      this.renderer.stroke(0);
+      this.renderer.strokeWeight(3);
       this.renderer.fill(this.logoColorOscillator.stateAtPoint(i * this.logoOscillationWaveLength));
       this.renderer.text(currentChar, 0, 0);
       this.renderer.pop();

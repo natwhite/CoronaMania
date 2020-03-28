@@ -11,8 +11,8 @@ export class RNGColorOscillator implements ITransform<number[]> {
   private gOscillator: Oscillator;
   private bOscillator: Oscillator;
 
-  constructor() {
-    const num = () => Functions.getFloatBetween(0.3, 1.2);
+  constructor(min = 0.3, max = 1.2) {
+    const num = () => Functions.getFloatBetween(min, max);
     this.rOscillator = new Oscillator(0, 255, num());
     this.gOscillator = new Oscillator(0, 255, num());
     this.bOscillator = new Oscillator(0, 255, num());

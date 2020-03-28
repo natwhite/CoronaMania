@@ -11,9 +11,16 @@ export class Sigmoid implements ITransform<number> {
   private readonly strength: number;
   private readonly spread: number;
   private readonly completeRange: number;
-  private readonly completePercent = 0.01;
+  private completePercent = 0.01;
 
-  constructor(start: number, stop: number, delta: number, strength: number = 1, initialPercent = 0) {
+  constructor(
+    start: number,
+    stop: number,
+    delta: number,
+    strength: number = 1,
+    initialPercent = 0,
+    completePercent = 0.01
+  ) {
     this.start = start;
     this.stop = stop;
     this.spread = 5.0 / strength;
@@ -21,6 +28,7 @@ export class Sigmoid implements ITransform<number> {
     this.delta = delta * (this.spread * 2);
     this.strength = strength;
     this.state = -this.spread + 2 * this.spread * initialPercent;
+    this.completePercent = completePercent;
   }
 
   public nextState(): number {
