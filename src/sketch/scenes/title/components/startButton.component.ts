@@ -10,7 +10,6 @@ import {SketchComponent} from '../../../core/SketchComponent';
 export class StartButtonComponent extends SketchComponent implements IInteractiveComponent {
 
   public startButtonShrinkGrow;
-  public startButtonColor = [0, 0, 0];
   public displayOutline = false;
   public outlineColor = 255;
   public startButtonHovered = false;
@@ -38,7 +37,7 @@ export class StartButtonComponent extends SketchComponent implements IInteractiv
       this.startButtonShrinkGrow.nextState();
     }
 
-    this.renderer.fill(this.startButtonColor);
+    this.renderer.fill(0);
     this.renderer.stroke(this.outlineColor);
     this.renderer.strokeWeight(4);
     if (this.displayOutline) {
@@ -54,7 +53,6 @@ export class StartButtonComponent extends SketchComponent implements IInteractiv
   };
 
   public onClick(clickEvent: ClickEvent) {
-    this.startButtonColor = Functions.getRandomColor();
     this.onInteraction.emit('click');
   }
 

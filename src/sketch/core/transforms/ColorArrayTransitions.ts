@@ -22,7 +22,6 @@ export class ColorArrayTransitions implements ITransform<number[]> {
     this.delta = 100 / framesPerCycle;
   }
 
-  // TODO : Fix jumping to 100% of next color before beginning next transition.
   public nextState = () => {
     this.statePercent += this.delta;
 

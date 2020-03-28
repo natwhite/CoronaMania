@@ -2,7 +2,9 @@ import {ClickEvent} from './core/event/ClickEvent';
 import {DragMouseEvent} from './core/event/DragMouseEvent';
 import {SceneTransitionManager, TransitionDirectionType} from './core/SceneTransitionManager';
 import {BackgroundGraphics} from './global/components/backgroundGraphics.component';
+import {LevelSelectScene} from './scenes/levelSelect/levelSelect.scene';
 import {OptionsScene} from './scenes/options/options.scene';
+import {RewardsScene} from './scenes/rewards/rewards.scene';
 import {TitleScene} from './scenes/title/title.scene';
 
 // Going to need a way to import, obj files.
@@ -30,20 +32,33 @@ export const GameSketch = (s) => {
 
     const title = new TitleScene(s);
     const options = new OptionsScene(s);
+    const rewards = new RewardsScene(s);
+    const levelSelect = new LevelSelectScene(s);
 
     sceneTransitionManager = new SceneTransitionManager(s, [
       title,
-      options
+      options,
+      rewards,
+      levelSelect
     ]);
     sceneTransitionManager.setTransitionOnDrag(0, 1, TransitionDirectionType.LEFT);
     sceneTransitionManager.setTransitionOnDrag(1, 0, TransitionDirectionType.RIGHT);
+
+    sceneTransitionManager.setTransitionOnDrag(0, 2, TransitionDirectionType.RIGHT);
+    sceneTransitionManager.setTransitionOnDrag(2, 0, TransitionDirectionType.LEFT);
     // TODO : Scene transitions need to be more 'snappy' rather than transitions.
     // TODO : Resize events don't trigger on unloaded scenes, nor on scene changes.
     title.onClick.on('transition', () => {
-      sceneTransitionManager.transitionToScene(1, TransitionDirectionType.LEFT);
+      sceneTransitionManager.transitionToScene(3, TransitionDirectionType.DOWN);
     });
     options.onClick.on('transition', () => {
       sceneTransitionManager.transitionToScene(0, TransitionDirectionType.RIGHT);
+    });
+    rewards.onClick.on('transition', () => {
+      sceneTransitionManager.transitionToScene(0, TransitionDirectionType.LEFT);
+    });
+    levelSelect.onClick.on('transition', () => {
+      sceneTransitionManager.transitionToScene(0, TransitionDirectionType.UP);
     });
 
     canvas = s.createCanvas(width, height, s.WEBGL);
